@@ -1,0 +1,401 @@
+
+<style>
+    
+	.reference  {
+    text-indent: -1em;
+    margin-left: 2em;
+  }
+	
+	.btn-black, .btn-black:link, .btn-black:focus, .btn-black.focus {
+    color: #ffc600;
+    background-color: #000000;
+    border: 1px solid yellow;
+    }
+    .btn-black:visited, .btn-black:active, .btn-black.active, .btn-black:active.focus, .btn-black.active.focus {
+    color: #ffc600;
+    background-color: #000000;
+    border: 1px solid yellow;
+    }
+    .btn-black:hover {
+    color: snow;
+    }
+    p {
+    font-size: 1.2em;
+    line-height: 160%;
+    }
+    blockquote p {
+    font-size: 1em;
+    }
+    h1, h2, h3, .inline-head {
+    font-weight: bold;
+    }
+    
+	h2 { font-size: 1.5em; font-weight: bold; }
+	h2 {
+    margin: -5px 0 0 0;
+    }
+    h1 + h4, h2 + h4 {
+    margin: 25px 0 15px 0;
+    }
+    h3 + h4 {
+    margin: -10px 0 15px 0;
+    }
+    h4 + h4 {
+    margin: -10px 0 15px 0;
+    }
+    h4 + h5 {
+    margin: -10px 0 15px 0;
+    }
+    h5 + h5 {
+    margin: -10px 0 15px 0;
+    }
+    h4 {
+    margin: 5px 0 3 0;
+    color: black;
+    }
+    .download-pdf {
+    margin: 10px 0;
+    }
+    .normal-text {
+    font-style: normal;
+    }
+    .body-lr-indent {
+    margin: 0 8rem 2rem;
+    }
+    p.textindent-2 {
+    text-indent: 2rem;
+    }
+    p.textindent-4 {
+    text-indent: 4rem;
+    }
+    .indented {
+    padding-left: 50pt;
+    padding-right: 50pt;
+    }
+    .liitem {font-size: 1.2em; line-height: 160%; margin-left: 1em;
+    margin-bottom: 1.5em;
+    }
+    .h2-quote {
+    margin: 2em 0px;
+    padding: 0px;
+    color: #004a5c;"
+    }
+	.q {
+	font-family: 'Old Standard TT', serif;
+	font-size: 1.5em;
+	fontweight: bold; 
+	}
+	.q-blue {
+		font-family: 'Old Standard TT', serif;
+	font-size: 1.75em;
+	fontweight: bold;
+		color: blue;
+	}
+	
+    .panel-shadow {
+    box-shadow: 1px 2px 1px 1px rgba(0, 0, 0, 0.4);
+    }
+    .text-shadow {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+    }
+    .text-shadow2 {
+    text-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+    }
+    .first-letter {
+    color: #ff9900;
+    float: left;
+    font-family: Georgia;
+    font-size: 75px;
+    line-height: 60px;
+    padding-top: 4px;
+    padding-right: 8px;
+    padding-left: 3px;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+    }
+    .panel-border {
+    border-style: solid;
+    border-width: 4px;
+    border-color: black;
+    }
+    .outline {
+    margin: 0px;
+    padding: 4rem;
+    border: 1px solid grey;
+    outline-style: double;
+    outline-color: lightgrey;
+    }
+    .text-right{
+    text-align: right;
+		float: right;
+    }
+	.text-center{
+	text-align: center;	
+	}
+	.margin {
+		margin: 1em;
+	}
+	.testimonial-quote {
+    font-size: 16px;
+}
+
+.testimonial-quote blockquote {
+    /* Negate theme styles */
+    border: 0;
+    margin: 0;
+    padding: 0;
+
+    background: none;
+    color: gray;
+    font-family: Georgia, serif;
+    font-size: 1.5em;
+    font-style: italic;
+    line-height: 1.4 !important;
+    margin: 0;
+    position: relative;
+    text-shadow: 0 1px snow;
+    z-index: 600;
+}
+
+.testimonial-quote blockquote * {
+    box-sizing: border-box; 
+}
+
+.testimonial-quote blockquote p {
+    color: #75808a; 
+    line-height: 1.4 !important;
+}
+
+.testimonial-quote blockquote p:first-child:before {
+    content: '\201C';
+    color: #81bedb;
+    font-size: 7.5em;
+    font-weight: 700;
+    opacity: .3;
+    position: absolute;
+    top: -.4em;   
+    text-shadow: none;
+    z-index: -300;
+}
+
+.testimonial-quote img {
+    border: 3px solid #9CC1D3;
+    border-radius: 50%;
+    display: block;
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    top: -.2em; 
+    left: 0;    
+}
+
+.testimonial-quote cite {
+    color: gray;
+    display: block;
+    font-size: .8em; 
+}
+  
+.testimonial-quote cite span {
+    color: #5e5e5e;
+    font-size: 1em;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 1px snow; 
+}
+
+.testimonial-quote {
+    position: relative; 
+}
+.fancy-button {
+  background-color: #f2f2f2; /* Green */
+  border: none;
+  color: snow;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+	}
+	
+	.fancy-button:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+	.button-shadow {
+		box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2), 0 2px 5px 0 rgba(0,0,0,0.19); }
+		
+/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#dfdfdf+0,dfdfdf+82&0.65+0,0+72 */
+		
+
+	.indent {
+		padding-left: 18%
+	}	
+	
+.no-pad {
+	padding: 0px;
+		}
+	.small-text {
+		font-size: 90%;
+	}	
+	.large-text {
+		font-size: 150%;
+	}
+
+	.big-li-text{
+    font-size: 1.2em;
+    line-height: 160%;
+    }
+	
+	 /* Narration Icon */
+    .Narration-icon {
+        width: 30px;
+        height: 30px;
+        display: inline-block; 
+		margin-left: 0px; /* Left margin for space from the edge */}
+		
+		.subtitle {
+  font-size: 2.25em;       
+  font-weight: bold;      
+  line-height: 1.2;        /* tighten up the spacing if you like */
+  margin: 0.5em 0 0.75em;   /* tweak top/bottom to suit your layout */
+}
+</style>
+
+<div class="container-fluid">
+<div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8"> <a id="#"></a>
+	
+	
+ <!-- Article Header -->
+        <h1>Developing Equal Opportunity Advisors</h1>
+	<!--<h2 class="subtitle">The Soldier Load</h2>-->
+        <h3><span style="color: black;">By Sgt. Maj. Pedro I. Campoverde</span></h3>
+        <h4>XVIII Airborne Corps and Fort Bragg</h4>
+        <p>September 22, 2025</p>
+        
+	
+<p><a href="/Portals/7/nco-journal/images/2025/September/Equal-Opportunity/Equal_Opportunity-UA.pdf" title="Download the PDF" class="btn btn-xs btn-primary" onclick="_gaq.push(['_trackEvent','PDF Blue Button Download','Click', this.href]);" target="_blank">Download the PDF <img alt="" src="/portals/7/Images/pdficon_small.png"/></a>
+</p>
+	
+	
+<!-- Start Image 1 -->
+<div class="panel panel-default panel-shadow">
+<div class="panel-body"><img class="img-responsive" alt="This lead image for the article shows a photo of the two Soldiers standing beside a wall outside, a robotic dog beside them. This image is the first in a series of four accompanying the article." src="/Portals/7/nco-journal/images/2025/September/Equal-Opportunity/Feature.png" /></div>
+<div class="panel-footer">
+<p class="small">Sgt. 1st Class John McLaughlin, equal opportunity advisor (EOA), 1st Stryker Brigade Combat Team, 4th Infantry Division, responds to equal
+opportunity questions, July 24, 2024, at Fort Carson, Colorado. EO program managers and sergeants major should support the development
+of those in EOA positions and improve the Army’s MEO program. (U.S. Army photo by Spc. William Rogers)</p>
+</div>
+</div>
+<!-- End Image 1 -->
+	
+	
+ <!-- Article Content -->
+	
+		<h3>Introduction</h3>
+	
+	<p><span class="q"><em>D</em></span>eveloping skilled and proficient equal opportunity advisors (EOAs) is a crucial mission in support of Army command policy. EOAs’ role in the Military Equal Opportunity (MEO) program is indispensable, as they advise commanders and leaders on command climate and human relations issues.</p>
+	
+	
+	
+	<p>In today’s complex operational environment, developing effective training, mentorship, evaluation, and collaboration enables EOAs to share their stories, learn together, and discover new ideas to address equal opportunity (EO)-related issues. EO program managers and sergeants major should support the development of those in EOA positions and improve the Army’s MEO program.</p>
+		<h3>Training</h3>
+		<p>The Equal Opportunity Advisor Course (EOAC) provides necessary knowledge and skills, but practical training is equally important. EOAs need effective training programs after completing the course to prepare them for challenges in the field.</p>
+		<p>For example, EOAs could benefit from attending the Equal Employment Opportunity Mediation Course (EEOMC). It equips them with skills to resolve EO conflicts and others in their organizations (Defense Equal Opportunity Management Institute [DEOMI], 2024).</p>
+		<p>Ensuring advisors reinforce their understanding of critical concepts after leaving DEOMI will enhance their ability to apply effective strategies toward mission accomplishment in their organizations.</p>
+		<p>By bridging the gap between theory and practice after the EOAC, these professionals can confidently assist commanders in fostering a culture of dignity and respect that values individuals’ contributions.</p>
+	
+		<!-- Start Image 2 -->
+<div class="panel panel-default panel-shadow pull-left col-sm-6 m-r-2 margin no-pad">
+<div class="panel-body"><img class="img-responsive" alt="A vertical photograph shows two Soldiers shaking hands outside. The gaze of the Soldier at the image’s center leads the viewer’s eye toward the right edge of the photograph. This image is the second in a series of three accompanying the article." src="/Portals/7/nco-journal/images/2025/September/Equal-Opportunity/2.png"></div>
+<div class="panel-footer">
+<p class="small">Master Sgt. Carlos Retana, left, former 52nd Air Defense Artillery
+Brigade equal opportunity advisor and master gunner, received a
+Meritorious Service Medal Aug. 23, 2024, in Sembach, Germany.
+Mentorship provides equal opportunity advisors (EOAs)
+professional support and a platform to discuss challenges and
+seek advice from someone who understands the assignment.
+(U.S. Army photo by Capt. Alexander Watkins)</p>
+</div>
+</div>
+<!-- End Image 2 -->
+	
+	
+		<h3>Mentorship</h3>
+		<p>Mentorship is pivotal in empowering EOAs to succeed in their roles. According to human resources researcher William Castellano (2014), learning directly from a seasoned leader about what it takes to be successful in an organization is a valuable learning experience.</p>
+		<p>For EOAs, mentorship provides professional support and a platform to discuss challenges and seek advice from someone who understands the assignment. These opportunities can enhance EOAs’ skills by allowing them to communicate with knowledgeable mentors and share insights into human relations dynamics (Department of the Army [DA], 2025).</p>
+		<p>Mentorship also allows EOAs to build professional connections leading to new collaboration opportunities in their field and later in their careers. Mentors can also help advisors develop specific skills, such as conflict management resolution, communication, and training implementation in support of the commander’s MEO program.</p>
+		<p>Through mentorship, learning, and support, EOAs can maximize best practices, evolving trends, and adaptability in maintaining proactive MEO programs in their organizations.</p>
+		<p>EOAs committed to professional development benefit from mentorship opportunities, which foster personal growth and increase leadership skills. Mentors are crucial to this process, and organizational support is integral to EOAs’ success.</p>
+		<h3>Evaluations</h3>
+		<p>Evaluations are critical to fostering a culture of continuous learning and improvement among EOAs and across the Army. Such examinations can identify areas for improvement and ensure EOAs stay updated on best practices and regulatory guidance.</p>
+		<p>Professors Raymond Noe and Amitabh Kodwani (2017) suggest that evaluations detail how well training works. Such studies can reveal gaps in knowledge or practice, and addressing these gaps can improve EOAs’ effectiveness.</p>
+		<p>As part of their leader development program, EO program managers and sergeants major should implement regular evaluations to foster accountability among advisors. It encourages them to stay relevant in conducting assigned duties.</p>
+		<p>For example, using staff assistance visits to evaluate on-the-job knowledge and skills helps determine how much EOAs contribute to their assigned units (DA, 2025). By consistently gathering feedback and analyzing advisor effectiveness, EO program managers and sergeants major can adapt their strategies to meet their teams’ professional needs.</p>
+	
+		
+	<!-- Start Image 3 -->
+<div class="panel panel-default panel-shadow">
+<div class="panel-body"><img class="img-responsive" alt="A horizontal photograph shows a group of Soldiers standing in a circle on a gym floor, with a similar group huddled in the distance. This image is the third in a series of three accompanying the article." src="/Portals/7/nco-journal/images/2025/September/Equal-Opportunity/3.png" /></div>
+<div class="panel-footer">
+<p class="small">Reserve Soldiers, 143d Expeditionary Sustainment Command, conduct equal opportunity training at Camp Arifjan, Kuwait, July 15, 2023.
+Fostering collaborative activities among command levels and the Defense Equal Opportunity Management Institute (DEOMI) is instrumental
+in enhancing EOAs’ effectiveness. (U.S. Army Reserve photo by Capt. Katherine Alegado)</p>
+</div>
+</div>
+<!-- End Image 3 -->
+	
+	
+		<p>A proactive approach strengthens advisors’ capabilities in support of the commander’s MEO program. It instills confidence among organizational leaders that EOAs are developed and relevant, benefiting both advisors and the organization. Committing to these evaluations is crucial in fostering a continuous learning and improvement culture.</p>
+		<h3>Collaboration</h3>
+		<p>Fostering collaborative activities among command levels and the DEOMI is instrumental in enhancing EOAs’ effectiveness. The effort helps both sides understand each other better, and it makes leaders’ goals more transparent — while allowing team members to express their thoughts and views (DA, 2025). Collaboration strengthens relationships and promotes a shared commitment to professional development.</p>
+		<p>For example, by participating in panels or forums during the EOAC, advisors can share experiences, strategies, and challenges with other EOAs across the force. Advisors can enhance their capabilities by participating in military and civilian outreach activities while driving meaningful organizational change.</p>
+		<p>Collaboration creates platforms to maximize engagement and empower EOAs to shape a more productive military culture and climate. By focusing on collaboration, organizational and strategic leaders can cultivate skilled EOAs who contribute to a more effective, efficient, and relevant unit’s MEO program. Active participation in these collaborative efforts inspires leaders and MEO professionals to shape the program’s future.</p>
+		<h3>Building and Supporting EOAs</h3>
+		<p>EOAs are unique: They are an integral position primarily held by NCOs. An organization with skilled and capable EOAs helps everyone. Therefore, building and supporting EOAs is essential to maximizing people’s abilities and ensuring Soldiers receive fair treatment based on their skills, performance, and potential — which supports readiness (DA, 2025).</p>
+		<p>Those interested in becoming EOAs should speak with their chain of command and their career talent managers for assignment as full-time MEO professionals. Selection involves a recommendation process, screening, and DEOMI attendance (DA, 2025).</p>
+		<p>Leaders interested in learning more about developing their EOAs can contact their installation’s MEO program manager for support in creating a network of competent, confident, and connected EOAs able to handle complex situations while serving their units (DEOMI, 2024). These measures will ultimately lead to impartial and more productive environments in the Army and beyond.</p>
+		<h3>Conclusion</h3>
+		<p>Developing EOAs is not just a requirement but an investment in the future of the Army’s MEO program. By integrating training programs, mentorship opportunities, consistent evaluations, and collaborative engagements, EO program managers and sergeants major can create an environment where these leaders share their experiences, learn from one another, and discover innovative solutions to EO-related issues.</p>
+		<p>This effort will lead to a more skilled and proficient EOA force better equipped to handle future challenges. The benefits include a more effective MEO program, an improved command climate, and a more productive military culture.</p>
+		<p>It is crucial to create opportunities to develop skilled and proficient EOAs who can cover the policies and regulations surrounding EO while focusing on real-world applications and tasks they may encounter in the field.</p>
+	
+	
+	<hr>
+
+<h3 style="text-align: center;">References</h3>
+	
+<p class="reference">Castellano, W. G. (2014). <em>Practices for engaging the 21st century workforce: Challenges of talent management in a changing workplace</em>. Pearson Education.</p>
+
+<p class="reference">Defense Equal Opportunity Management Institute. (2024, July 31). <em>Course catalog</em>. <a href="https://www.deomi.mil/Education-and-Training/General-Information/#course-catalog" onclick="_gaq.push(['_trackEvent','Notes Link','Click', this.href]);" target="_blank">https://www.deomi.mil/Education-and-Training/General-Information/#course-catalog</a></p>
+
+<p class="reference">Department of the Army. (2025). <em>Army command policy</em> (AR 600-20). <a href="https://armypubs.army.mil/epubs/DR_pubs/DR_a/ARN43057-AR_600-20-001-WEB-2.pdf" onclick="_gaq.push(['_trackEvent','Notes Link','Click', this.href]);" target="_blank">https://armypubs.army.mil/epubs/DR_pubs/DR_a/ARN43057-AR_600-20-001-WEB-2.pdf</a></p>
+
+<p class="reference">Noe, R. A., &amp; Kodwani, A. D. (2017). <em>Employee training and development</em>. McGraw-Hill Education.</p>
+
+
+	
+      <!-- Bio Section -->
+        <span id="bio">&nbsp;</span>
+        <div class="well well-lg panel-shadow">
+          <p class="small"><strong>Sgt. Maj. Pedro I. Campoverde</strong> is the XVIII Airborne Corps equal opportunity sergeant major at Fort Bragg, North Carolina. He has served in leadership and broadening assignments over the last 26 years, ranging from ammunition team chief to sergeant major. He holds a bachelor’s degree in public administration from Upper Iowa University and a Master of Science in management from Excelsior University.</p>
+        </div>
+        
+
+<!-- Start Back-to-Top Button -->
+<p class="pull-right"><a href="#" title="Back to Top" class="btn btn-black" style="border: 1px solid black;" onclick="_gaq.push(['_trackEvent','Black Button','Click', this.href]);">Back to Top</a></p>
+<!-- End Back-to-Top Button -->
+</div>
+</div>
+</div>
+<div class="col-sm-2"></div>
