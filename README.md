@@ -223,3 +223,32 @@ grep -q "_gaq.push(['_trackEvent','Notes Link','Click'" "$FILE" \
 - **Flags:**
   - “Inserted placeholder PDF href” or “Set PDF href to UA path”.
   - Any micro-fixes (for example, “rejoined ADP URL”, “added missing period in final paragraph”).
+
+## Article Swap Playbook (NCOJ Standard)
+
+**What editors type**
+- Put simple photo tokens in the article body:
+  - `[photo main]`
+  - `[photo left]`
+  - `[photo right]`
+
+**What the code swapper does**
+1. Injects the standard NCOJ CSS inline at the top of the HTML from:
+   - `templates/article-style-inline.css.html`
+2. Replaces tokens with a uniform framed image container:
+   - `templates/snippets/image-card-Main.html`
+   - `templates/snippets/image-card-Left.html`
+   - `templates/snippets/image-card-Right.html`
+3. Leaves placeholders:
+   - `(image link here)` `(image alt text here)` `(image caption here)`
+4. After `Left`/`Right`, inserts `<div class="image-clear"></div>` so text stops wrapping.
+
+**Where the CSS goes**
+- The entire `<style> … </style>` block is inserted **before** the first `<div class="container-fluid">` (or at the very top if not found).
+
+**508 notes**
+- Provide meaningful `alt` text (no “image of …”). Visible focus rings and color contrast are already handled in the CSS.
+
+**Running the swapper**
+- **Node**: `node tools/article_swapper.js input.html output.html`
+- **Python**: `python tools/article_swapper.py input.html output.html`
