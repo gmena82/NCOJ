@@ -1,0 +1,241 @@
+<style>
+    /* =========================
+       Tokens
+    ========================= */
+    :root{
+      --brand-gold:#ffc600;
+      --brand-black:#000;
+      --brand-blue:#004a5c;
+      --frame-bg:#f8f8f8;
+      --frame-border:#dddddd;
+      --frame-caption-bg:#f1f1f1;
+      --frame-text:#4a4a4a;
+    }
+
+    /* =========================
+       Base type and spacing
+    ========================= */
+    p{ font-size:1.2em; line-height:1.6; }
+    blockquote p{ font-size:1em; }
+
+    /* headings default bold for legacy NCOJ */
+    h1,h2,h3,.inline-head{ font-weight:bold; }
+    h2{ font-size:1.5em; margin:-5px 0 0; }
+    h4{ margin:5px 0 3px 0; color:#000; }
+
+    /* Heading adjacency spacing */
+    h1 + h4, h2 + h4 { margin:25px 0 15px; }
+    h3 + h4, h4 + h4, h4 + h5, h5 + h5 { margin:-10px 0 15px; }
+
+    /* Utilities */
+    .normal-text{ font-style:normal; }
+    .body-lr-indent{ margin:0 8rem 2rem; }
+    p.textindent-2{ text-indent:2rem; }
+    p.textindent-4{ text-indent:4rem; }
+    .indented{ padding-left:3rem; padding-right:3rem; }
+    .margin{ margin:1em; }
+    .no-pad{ padding:0; }
+    .small-text{ font-size:90%; }
+    .large-text{ font-size:150%; }
+    .big-li-text, .liitem{ font-size:1.2em; line-height:1.6; }
+    .liitem{ margin-left:1em; margin-bottom:1.5em; }
+    .text-right{ text-align:right; }
+    .text-center{ text-align:center; }
+    .download-pdf{ margin:10px 0; }
+
+    /* Hanging indent for references */
+    .reference{ text-indent:-1em; margin-left:2em; }
+
+    /* Quotes / callouts */
+    .h2-quote{ margin:2em 0; padding:0; color:var(--brand-blue, #004a5c); }
+    .q, .q-blue{ font-family:'Old Standard TT', serif; font-weight:bold; }
+    .q{ font-size:1.5em; }
+    .q-blue{ font-size:1.75em; color:blue; }
+
+    /* Panels / borders / outlines (legacy helpers if needed) */
+    .panel-shadow{ box-shadow:0 1px 3px rgba(0,0,0,.2); }
+    .panel-border{ border:4px solid #000; }
+    .outline{
+      margin:0;
+      padding:4rem;
+      border:1px solid #ccc;
+      outline-style:double;
+      outline-color:#d3d3d3;
+    }
+
+    /* Text shadows */
+    .text-shadow{  text-shadow:1px 1px 2px rgba(0,0,0,.4); }
+    .text-shadow2{ text-shadow:2px 2px 2px rgba(0,0,0,.4); }
+
+    /* Buttons */
+    .btn-black,
+    .btn-black:link,
+    .btn-black:visited,
+    .btn-black:focus,
+    .btn-black:active{
+      color:var(--brand-gold, #ffc600);
+      background-color:var(--brand-black, #000);
+      border:1px solid yellow;
+    }
+    .btn-black:hover{ color:#fff; }
+    .btn-black:focus-visible{
+      outline:3px solid #ffc600; /* 508 focus */
+      outline-offset:2px;
+    }
+
+    /* Fancy button (508: fix low-contrast text) */
+    .fancy-button{
+      background:#f2f2f2;
+      border:1px solid #ccc;
+      color:#111;
+      padding:15px 32px;
+      text-align:center;
+      text-decoration:none;
+      display:inline-block;
+      font-size:16px;
+      margin:4px 2px;
+      cursor:pointer;
+      transition:box-shadow .2s ease, transform .1s ease;
+    }
+    .fancy-button:hover{
+      box-shadow:0 12px 16px 0 rgba(0,0,0,.24), 0 17px 50px 0 rgba(0,0,0,.19);
+    }
+    .fancy-button:focus-visible{
+      outline:3px solid #1a73e8;
+      outline-offset:2px;
+    }
+
+    /* Global link focus ring to aid keyboard nav */
+    a:focus-visible{
+      outline:3px solid #1a73e8;
+      outline-offset:2px;
+    }
+
+    /* Indent utility */
+    .indent{ padding-left:18%; }
+
+    /* Narration icon */
+    .Narration-icon{
+      width:30px; height:30px; display:inline-block; margin-left:0;
+    }
+
+    /* Subtitle (smaller, not bold, like original NCOJ) */
+    .subtitle{
+      font-size:1.75em;
+      font-weight:normal;
+      line-height:1.25;
+      margin:.25em 0 .6em;
+    }
+
+    /* === NEW: header roles === */
+    .author{ color:#000; margin:0.2em 0 0.4em; }
+    .org{ color:#000; margin:0.2em 0 0.6em; }
+    .pubdate{ margin:0.2em 0 1em; }
+
+    /* =========================
+       Testimonial pattern
+    ========================= */
+    .testimonial-quote{ position:relative; font-size:16px; }
+    .testimonial-quote blockquote{
+      border:0; margin:0; padding:0;
+      background:none; color:gray;
+      font-family:Georgia, serif;
+      font-size:1.5em; font-style:italic;
+      line-height:1.4 !important;
+      position:relative; text-shadow:0 1px snow; z-index:1;
+    }
+    .testimonial-quote blockquote *{ box-sizing:border-box; }
+    .testimonial-quote blockquote p{ color:#75808a; line-height:1.4 !important; }
+    .testimonial-quote blockquote p:first-child:before{
+      content:'\201C';
+      color:#81bedb; font-size:7.5em; font-weight:700; opacity:.3;
+      position:absolute; top:-.4em; text-shadow:none; z-index:-1;
+    }
+    .testimonial-quote img{
+      border:3px solid #9CC1D3; border-radius:50%;
+      display:block; width:120px; height:120px;
+      position:absolute; top:-.2em; left:0;
+    }
+    .testimonial-quote cite{
+      color:#4a4a4a;
+      display:block;
+      font-size:.8em;
+    }
+    .testimonial-quote cite span{
+      color:#2f2f2f;
+      font-size:1em;
+      font-style:normal;
+      font-weight:700;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      text-shadow:0 1px snow;
+    }
+
+    /* Higher user-requested contrast */
+    @media (prefers-contrast: more){
+      .testimonial-quote blockquote{ color:#3a3a3a; }
+      .testimonial-quote blockquote p{ color:#3a3a3a; }
+      .h2-quote{ color:#003844; }
+    }
+
+    /* =========================
+       Uniform image cards
+       Use on wrapper: <figure class="image-card Main|Left|Right">
+    ========================= */
+    .image-card{
+      background:var(--frame-bg);
+      border:1px solid var(--frame-border);
+      box-shadow:0 1px 3px rgba(0,0,0,.2);
+      margin:1rem 0;
+    }
+    .image-card .image-body{
+      padding:8px;
+      background:#fff; /* white mat around the image */
+    }
+    .image-card .image-body img{
+      display:block;
+      width:100%;
+      height:auto;
+    }
+    .image-card .image-caption{
+      background:var(--frame-caption-bg);
+      border-top:1px solid #e2e2e2;
+      color:var(--frame-text);
+      font-size:90%;
+      line-height:1.5;
+      padding:.75rem .9rem;
+    }
+
+    /* Clear helper when wrapping text around floated image cards */
+    .image-clear{ clear:both; }
+
+    /* Layout variants (md+ ≈ Bootstrap md) */
+    @media (min-width:768px){
+      .image-card.Left{
+        float:left;
+        width:50%;
+        margin:0 1rem 1rem 0;
+      }
+      .image-card.Right{
+        float:right;
+        width:50%;
+        margin:0 0 1rem 1rem;
+      }
+      .image-card.Main{
+        float:none;
+        width:100%;
+        margin:1rem 0;
+      }
+    }
+
+    /* === NEW: bio container === */
+    .bio-card{
+      background:var(--frame-bg);
+      border:1px solid var(--frame-border);
+      box-shadow:0 1px 3px rgba(0,0,0,.2);
+      padding:1rem 1.25rem;
+      margin:1rem 0 0;
+    }
+</style>
+
+

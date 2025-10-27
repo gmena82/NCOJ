@@ -252,3 +252,30 @@ grep -q "_gaq.push(['_trackEvent','Notes Link','Click'" "$FILE" \
 **Running the swapper**
 - **Node**: `node tools/article_swapper.js input.html output.html`
 - **Python**: `python tools/article_swapper.py input.html output.html`
+
+## Article Swap Playbook (NCOJ Standard) – Header + Bio Rules
+
+**What editors type**
+- Header block can be simple:
+  - `<h1>Title…</h1>`
+  - `<p>By Full Name</p>`  ← the swapper upgrades this to `<h3 class="author">By Full Name</h3>`
+  - `<p>Unit / Organization</p>` ← the swapper upgrades to `<h4 class="org">…</h4>`
+  - If no date is present, the swapper inserts: `<p class="pubdate">(date goes here)</p>`
+
+**Images**
+- Use tokens in the article body:
+  - `[photo main]`, `[photo left]`, `[photo right]`
+- Swapper replaces them with framed image containers with placeholders, then inserts `<div class="image-clear"></div>` after Left/Right.
+
+**References + Bio**
+- Keep your References section as usual with `<h3>References</h3>`.
+- If no bio exists, the swapper appends:
+  - `templates/snippets/bio.html` after the References section (or at the end if References is missing).
+- Fill bio placeholders:
+  - `(name)` and `(bio)` inside the `.bio-card`.
+
+**CSS classes added**
+- `.author` → used on the `<h3>` author line (black text, tight margins).
+- `.org` → used on the `<h4>` organization line.
+- `.pubdate` → date paragraph.
+- `.bio-card` → uniform bio container style (light frame + subtle shadow).
