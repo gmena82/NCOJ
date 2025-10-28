@@ -279,3 +279,11 @@ grep -q "_gaq.push(['_trackEvent','Notes Link','Click'" "$FILE" \
 - `.org` → used on the `<h4>` organization line.
 - `.pubdate` → date paragraph.
 - `.bio-card` → uniform bio container style (light frame + subtle shadow).
+
+## References Formatting (Auto)
+- Keep a simple References section headed by `<h3>References</h3>`, followed by plain `<p>…</p>` lines.
+- The swapper automatically:
+  - converts each line to `<p class="reference">…</p>` (hanging indent is in CSS)
+  - converts any `<span>…</span>` inside the References block to `<em>…</em>` (APA-style italics)
+  - adds `target="_blank" rel="noopener"` and the GA click handler to all links:
+    - `onclick="_gaq.push(['_trackEvent','Notes Link','Click', this.href]);"`

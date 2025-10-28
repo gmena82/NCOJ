@@ -49,6 +49,45 @@ def normalize_header(html: str) -> str:
     new_header = f'{open_tag}{body}{close_tag}'
     return html[:m.start()] + new_header + html[m.end():]
 
+def normalize_references(html: str) -> str:
+    refs_head = re.search(r'(<h3[^>]*>\s*References\s*</h3>)', html, flags=re.I)
+    if not refs_head:
+        return html
+
+    start = refs_head.end()
+    boundary = re.search(r'(</section>|<h2\b|<h3\b|</div>\s*</div>\s*</div>)', html[start:], flags=re.I)
+    end = start + boundary.start() if boundary else len(html)
+
+    block = html[start:end]
+
+    def fix_p(match: re.Match) -> str:
+        tag = match.group(0)
+        if re.search(r'class=["\'][^"\']*reference', tag, flags=re.I):
+            return re.sub(r'class=["\'][^"\']*["\']', 'class="reference"', tag, count=1, flags=re.I)
+        if re.search(r'class=', tag, flags=re.I):
+            return re.sub(r'class=["\'][^"\']*["\']', 'class="reference"', tag, count=1, flags=re.I)
+        return re.sub(r'<p', '<p class="reference"', tag, count=1, flags=re.I)
+
+    block = re.sub(r'<p[^>]*>', fix_p, block, flags=re.I)
+    block = re.sub(r'<span\b[^>]*>', '<em>', block, flags=re.I)
+    block = re.sub(r'</span>', '</em>', block, flags=re.I)
+
+    def fix_link(match: re.Match) -> str:
+        pre, quote, url, post = match.groups()
+        attrs_lower = (pre + post).lower()
+        new_post = post
+        if 'target=' not in attrs_lower:
+            new_post += ' target="_blank"'
+        if 'rel=' not in attrs_lower:
+            new_post += ' rel="noopener"'
+        if 'onclick=' not in attrs_lower:
+            new_post += ' onclick="_gaq.push([\'_trackEvent\',\'Notes Link\',\'Click\', this.href]);"'
+        return f'<a{pre}href={quote}{url}{quote}{new_post}>'
+
+    block = re.sub(r'<a([^>]*?)href=(["\'])(.*?)\2([^>]*)>', fix_link, block, flags=re.I)
+
+    return html[:start] + block + html[end:]
+
 def insert_bio_if_missing(html: str, bio_tpl: str) -> str:
     if re.search(r'<div[^>]*class=["\'][^"\']*bio-card', html, flags=re.I):
         return html
@@ -79,6 +118,7 @@ def main():
     out = inject_css_at_top(html, css)
     out = expand_photo_tokens(out, main_tpl, left_tpl, right_tpl)
     out = normalize_header(out)
+    out = normalize_references(out)
     out = insert_bio_if_missing(out, bio_tpl)
 
     Path(out_file).write_text(out, encoding='utf-8')
