@@ -66,6 +66,40 @@ function normalizeHeader(html) {
   );
 }
 
+function normalizeReferences(html) {
+  const headingMatch = /<h3[^>]*>\s*References\s*<\/h3>/i.exec(html);
+  if (!headingMatch) return html;
+
+  const startIdx = headingMatch.index + headingMatch[0].length;
+  const boundaryMatch = /<\/section>|<h2\b|<h3\b|<\/div>\s*<\/div>\s*<\/div>/i.exec(html.slice(startIdx));
+  const endIdx = boundaryMatch ? startIdx + boundaryMatch.index : html.length;
+
+  let block = html.slice(startIdx, endIdx);
+
+  block = block.replace(/<p[^>]*>/gi, tag => {
+    if (/class=["'][^"']*\breference\b/i.test(tag)) {
+      return tag.replace(/class=["'][^"']*["']/i, 'class="reference"');
+    }
+    if (/class=/i.test(tag)) {
+      return tag.replace(/class=["'][^"']*["']/i, 'class="reference"');
+    }
+    return tag.replace(/<p/i, '<p class="reference"');
+  });
+
+  block = block.replace(/<span\b[^>]*>/gi, '<em>').replace(/<\/span>/gi, '</em>');
+
+  block = block.replace(/<a([^>]*?)href=(['"])(.*?)\2([^>]*)>/gi, (_m, pre, quote, url, post) => {
+    const attrs = (pre + post).toLowerCase();
+    let suffix = '';
+    if (!/target=/.test(attrs)) suffix += ' target="_blank"';
+    if (!/rel=/.test(attrs)) suffix += ' rel="noopener"';
+    if (!/onclick=/.test(attrs)) suffix += ' onclick="_gaq.push([\'_trackEvent\',\'Notes Link\',\'Click\', this.href]);"';
+    return `<a${pre}href=${quote}${url}${quote}${post}${suffix}>`;
+  });
+
+  return html.slice(0, startIdx) + block + html.slice(endIdx);
+}
+
 /* === NEW: ensure bio after References section ===
    - If no bio container exists, insert bio snippet after the References section.
 */
@@ -100,6 +134,7 @@ node tools/article_swapper.js input.html output.html
 - Injects CSS at top
 - Expands [photo main|left|right] tokens into image-card containers with placeholders
 - Normalizes header: author -> h3.author, org -> h4.org, adds date if missing
+- Normalizes References: enforces <p class="reference">, swaps <span> to <em>, hardens link attrs
 - Ensures a bio container appears after the References section
 */
 if (require.main === module) {
@@ -116,6 +151,7 @@ if (require.main === module) {
   let out = injectCssAtTop(html, css);
   out = expandPhotoTokens(out, tpls);
   out = normalizeHeader(out);
+  out = normalizeReferences(out);
   out = insertBioIfMissing(out, bio);
 
   fs.writeFileSync(outFile, out, 'utf8');
