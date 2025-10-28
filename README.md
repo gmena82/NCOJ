@@ -253,37 +253,32 @@ grep -q "_gaq.push(['_trackEvent','Notes Link','Click'" "$FILE" \
 - **Node**: `node tools/article_swapper.js input.html output.html`
 - **Python**: `python tools/article_swapper.py input.html output.html`
 
-## Article Swap Playbook (NCOJ Standard) – Header + Bio Rules
+## Header → PDF → Main Image (Auto placement)
 
-**What editors type**
-- Header block can be simple:
-  - `<h1>Title…</h1>`
-  - `<p>By Full Name</p>`  ← the swapper upgrades this to `<h3 class="author">By Full Name</h3>`
-  - `<p>Unit / Organization</p>` ← the swapper upgrades to `<h4 class="org">…</h4>`
-  - If no date is present, the swapper inserts: `<p class="pubdate">(date goes here)</p>`
+**Editors can keep the header minimal**:
+- `<h1>Title…</h1>`
+- `<p>By Full Name</p>` → swapper upgrades to `<h3 class="author">By …</h3>`
+- `<p>Unit / Organization</p>` → swapper upgrades to `<h4 class="org">…</h4>`
+- If no date provided, the swapper inserts `<p class="pubdate">(date goes here)</p>`
 
-**Images**
-- Use tokens in the article body:
-  - `[photo main]`, `[photo left]`, `[photo right]`
-- Swapper replaces them with framed image containers with placeholders, then inserts `<div class="image-clear"></div>` after Left/Right.
+**PDF button (auto)**
+- The swapper inserts a **Download the PDF** button **right after the date** using `templates/snippets/pdf-button.html`.
+- The href is a placeholder: **`(PDF link here)`** — editor replaces it with the real PDF path.
+- The icon path remains the same: `/portals/7/Images/pdficon_small.png`.
 
-**References + Bio**
-- Keep your References section as usual with `<h3>References</h3>`.
-- If no bio exists, the swapper appends:
-  - `templates/snippets/bio.html` after the References section (or at the end if References is missing).
-- Fill bio placeholders:
-  - `(name)` and `(bio)` inside the `.bio-card`.
+**Main (Feature) image (auto)**
+- The swapper places the first **Main** image **immediately after the PDF button**.
+- If you used `[photo main]`, it will be expanded and hoisted there.
+- If you didn’t include a Main image token, the swapper inserts a **placeholder Main** image card with:
+  - `(image link here)`, `(image alt text here)`, `(image caption here)`
+- Left/Right images remain where you place their tokens in the body; the swapper inserts `<div class="image-clear"></div>` after them.
 
-**CSS classes added**
-- `.author` → used on the `<h3>` author line (black text, tight margins).
-- `.org` → used on the `<h4>` organization line.
-- `.pubdate` → date paragraph.
-- `.bio-card` → uniform bio container style (light frame + subtle shadow).
+**References (auto)**
+- Use `<h3>References</h3>` then simple `<p>…</p>`. The swapper will:
+  - Convert to `<p class="reference">…</p>` (hanging indent)
+  - Convert any `<span>…</span>` titles to `<em>…</em>`
+  - Add `target="_blank" rel="noopener"` and GA `onclick` to links.
 
-## References Formatting (Auto)
-- Keep a simple References section headed by `<h3>References</h3>`, followed by plain `<p>…</p>` lines.
-- The swapper automatically:
-  - converts each line to `<p class="reference">…</p>` (hanging indent is in CSS)
-  - converts any `<span>…</span>` inside the References block to `<em>…</em>` (APA-style italics)
-  - adds `target="_blank" rel="noopener"` and the GA click handler to all links:
-    - `onclick="_gaq.push(['_trackEvent','Notes Link','Click', this.href]);"`
+**Bio (auto if missing)**
+- If there’s no bio, the swapper inserts `templates/snippets/bio.html` **right after the References section**.  
+  Fill in `(name)` and `(bio)`.

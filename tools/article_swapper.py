@@ -7,6 +7,7 @@ MAIN_TPL  = Path('templates/snippets/image-card-Main.html')
 LEFT_TPL  = Path('templates/snippets/image-card-Left.html')
 RIGHT_TPL = Path('templates/snippets/image-card-Right.html')
 BIO_TPL   = Path('templates/snippets/bio.html')
+PDF_TPL   = Path('templates/snippets/pdf-button.html')
 
 def inject_css_at_top(html: str, css: str) -> str:
     m = re.search(r'<div[^>]*class=["\']([^"\']*)container-fluid', html, flags=re.I)
@@ -21,7 +22,7 @@ def expand_photo_tokens(html: str, main_tpl: str, left_tpl: str, right_tpl: str)
 def normalize_header(html: str) -> str:
     header_re = re.compile(r'(<header[^>]*class=["\'][^"\']*article-header[^"\']*["\'][^>]*>)([\s\S]*?)(</header>)', re.I)
     m = header_re.search(html)
-    if not m: 
+    if not m:
         return html
     open_tag, inner, close_tag = m.groups()
     body = inner
@@ -46,45 +47,61 @@ def normalize_header(html: str) -> str:
         else:
             body = body + '\n<p class="pubdate">(date goes here)</p>'
 
+    # Marker for PDF/Main insertion
+    body = re.sub(r'(<p[^>]*class=["\'][^"\']*pubdate[^"\']*["\'][^>]*>[\s\S]*?</p>)',
+                  r'\1\n<!--__AFTER_PUBDATE__-->', body, count=1, flags=re.I)
+
     new_header = f'{open_tag}{body}{close_tag}'
     return html[:m.start()] + new_header + html[m.end():]
+
+def insert_pdf_after_date(html: str, pdf_tpl: str) -> str:
+    if '<!--__AFTER_PUBDATE__-->' in html:
+        return html.replace('<!--__AFTER_PUBDATE__-->', pdf_tpl + '\n<!--__AFTER_PDF__-->')
+    return re.sub(
+        r'(<header[^>]*class=["\'][^"\']*article-header[^"\']*["\'][^>]*>[\s\S]*?</header>)',
+        lambda m: m.group(0).replace('</header>', pdf_tpl + '\n<!--__AFTER_PDF__-->\n</header>'),
+        html, count=1, flags=re.I
+    )
+
+def hoist_main_after_pdf(html: str, main_tpl: str) -> str:
+    main_re = re.compile(r'<figure[^>]*class=["\'][^"\']*\bimage-card\b[^"\']*\bMain\b[^"\']*["\'][^>]*>[\s\S]*?</figure>', re.I)
+    m = main_re.search(html)
+    if '<!--__AFTER_PDF__-->' in html:
+        if m:
+            block = m.group(0)
+            without = html[:m.start()] + html[m.end():]
+            return without.replace('<!--__AFTER_PDF__-->', block + '\n<!--__AFTER_PDF__-->')
+        return html.replace('<!--__AFTER_PDF__-->', main_tpl + '\n<!--__AFTER_PDF__-->')
+    return html
 
 def normalize_references(html: str) -> str:
     refs_head = re.search(r'(<h3[^>]*>\s*References\s*</h3>)', html, flags=re.I)
     if not refs_head:
         return html
-
     start = refs_head.end()
-    boundary = re.search(r'(</section>|<h2\b|<h3\b|</div>\s*</div>\s*</div>)', html[start:], flags=re.I)
-    end = start + boundary.start() if boundary else len(html)
-
+    tail_match = re.search(r'(</section>|<h2|<h3|</div>\s*</div>\s*</div>|$)', html[start:], flags=re.I)
+    end = start + (tail_match.start() if tail_match else 0)
     block = html[start:end]
 
-    def fix_p(match: re.Match) -> str:
+    def fix_p_classes(match: re.Match) -> str:
         tag = match.group(0)
         if re.search(r'class=["\'][^"\']*reference', tag, flags=re.I):
             return re.sub(r'class=["\'][^"\']*["\']', 'class="reference"', tag, count=1, flags=re.I)
         if re.search(r'class=', tag, flags=re.I):
             return re.sub(r'class=["\'][^"\']*["\']', 'class="reference"', tag, count=1, flags=re.I)
-        return re.sub(r'<p', '<p class="reference"', tag, count=1, flags=re.I)
+        return tag.replace('<p', '<p class="reference"', 1)
+    block = re.sub(r'<p[^>]*>', fix_p_classes, block, flags=re.I)
 
-    block = re.sub(r'<p[^>]*>', fix_p, block, flags=re.I)
-    block = re.sub(r'<span\b[^>]*>', '<em>', block, flags=re.I)
-    block = re.sub(r'</span>', '</em>', block, flags=re.I)
+    block = re.sub(r'</?span>', lambda m: '</em>' if m.group(0).startswith('</') else '<em>', block, flags=re.I)
 
-    def fix_link(match: re.Match) -> str:
+    def link_repl(match: re.Match) -> str:
         pre, quote, url, post = match.groups()
-        attrs_lower = (pre + post).lower()
-        new_post = post
-        if 'target=' not in attrs_lower:
-            new_post += ' target="_blank"'
-        if 'rel=' not in attrs_lower:
-            new_post += ' rel="noopener"'
-        if 'onclick=' not in attrs_lower:
-            new_post += ' onclick="_gaq.push([\'_trackEvent\',\'Notes Link\',\'Click\', this.href]);"'
-        return f'<a{pre}href={quote}{url}{quote}{new_post}>'
-
-    block = re.sub(r'<a([^>]*?)href=(["\'])(.*?)\2([^>]*)>', fix_link, block, flags=re.I)
+        attrs = (pre + post).lower()
+        target = '' if 'target=' in attrs else ' target="_blank"'
+        rel = '' if 'rel=' in attrs else ' rel="noopener"'
+        onclick = '' if 'onclick=' in attrs else ' onclick="_gaq.push([\'_trackEvent\',\'Notes Link\',\'Click\', this.href]);"'
+        return f'<a{pre}href={quote}{url}{quote}{post}{target}{rel}{onclick}>'
+    block = re.sub(r'<a([^>]*?)href=(["\'])(.*?)\2([^>]*)>', link_repl, block, flags=re.I)
 
     return html[:start] + block + html[end:]
 
@@ -114,10 +131,13 @@ def main():
     left_tpl  = LEFT_TPL.read_text(encoding='utf-8')
     right_tpl = RIGHT_TPL.read_text(encoding='utf-8')
     bio_tpl   = BIO_TPL.read_text(encoding='utf-8')
+    pdf_tpl   = PDF_TPL.read_text(encoding='utf-8')
 
     out = inject_css_at_top(html, css)
     out = expand_photo_tokens(out, main_tpl, left_tpl, right_tpl)
     out = normalize_header(out)
+    out = insert_pdf_after_date(out, pdf_tpl)
+    out = hoist_main_after_pdf(out, main_tpl)
     out = normalize_references(out)
     out = insert_bio_if_missing(out, bio_tpl)
 
