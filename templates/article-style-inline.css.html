@@ -73,169 +73,50 @@
     .btn-black:visited,
     .btn-black:focus,
     .btn-black:active{
-      color:var(--brand-gold, #ffc600);
-      background-color:var(--brand-black, #000);
+      color:var(--brand-gold,#ffc600);
+      background-color:var(--brand-black,#000);
       border:1px solid yellow;
     }
     .btn-black:hover{ color:#fff; }
-    .btn-black:focus-visible{
-      outline:3px solid #ffc600; /* 508 focus */
-      outline-offset:2px;
-    }
+    .btn-black:focus-visible{ outline:3px solid #ffc600; outline-offset:2px; }
 
     /* Fancy button (508: fix low-contrast text) */
     .fancy-button{
-      background:#f2f2f2;
-      border:1px solid #ccc;
-      color:#111;
-      padding:15px 32px;
-      text-align:center;
-      text-decoration:none;
-      display:inline-block;
-      font-size:16px;
-      margin:4px 2px;
-      cursor:pointer;
+      background:#f2f2f2; border:1px solid #ccc; color:#111;
+      padding:15px 32px; text-align:center; text-decoration:none;
+      display:inline-block; font-size:16px; margin:4px 2px; cursor:pointer;
       transition:box-shadow .2s ease, transform .1s ease;
     }
-    .fancy-button:hover{
-      box-shadow:0 12px 16px 0 rgba(0,0,0,.24), 0 17px 50px 0 rgba(0,0,0,.19);
-    }
-    .fancy-button:focus-visible{
-      outline:3px solid #1a73e8;
-      outline-offset:2px;
-    }
+    .fancy-button:hover{ box-shadow:0 12px 16px rgba(0,0,0,.24), 0 17px 50px rgba(0,0,0,.19); }
+    .fancy-button:focus-visible{ outline:3px solid #1a73e8; outline-offset:2px; }
 
-    /* Global link focus ring to aid keyboard nav */
-    a:focus-visible{
-      outline:3px solid #1a73e8;
-      outline-offset:2px;
-    }
+    a:focus-visible{ outline:3px solid #1a73e8; outline-offset:2px; }
 
-    /* Indent utility */
     .indent{ padding-left:18%; }
+    .Narration-icon{ width:30px; height:30px; display:inline-block; margin-left:0; }
 
-    /* Narration icon */
-    .Narration-icon{
-      width:30px; height:30px; display:inline-block; margin-left:0;
-    }
+    /* Subtitle */
+    .subtitle{ font-size:1.75em; font-weight:normal; line-height:1.25; margin:.25em 0 .6em; }
 
-    /* Subtitle (smaller, not bold, like original NCOJ) */
-    .subtitle{
-      font-size:1.75em;
-      font-weight:normal;
-      line-height:1.25;
-      margin:.25em 0 .6em;
-    }
-
-    /* === NEW: header roles === */
+    /* Header roles */
     .author{ color:#000; margin:0.2em 0 0.4em; }
     .org{ color:#000; margin:0.2em 0 0.6em; }
     .pubdate{ margin:0.2em 0 1em; }
 
-    /* =========================
-       Testimonial pattern
-    ========================= */
-    .testimonial-quote{ position:relative; font-size:16px; }
-    .testimonial-quote blockquote{
-      border:0; margin:0; padding:0;
-      background:none; color:gray;
-      font-family:Georgia, serif;
-      font-size:1.5em; font-style:italic;
-      line-height:1.4 !important;
-      position:relative; text-shadow:0 1px snow; z-index:1;
-    }
-    .testimonial-quote blockquote *{ box-sizing:border-box; }
-    .testimonial-quote blockquote p{ color:#75808a; line-height:1.4 !important; }
-    .testimonial-quote blockquote p:first-child:before{
-      content:'\201C';
-      color:#81bedb; font-size:7.5em; font-weight:700; opacity:.3;
-      position:absolute; top:-.4em; text-shadow:none; z-index:-1;
-    }
-    .testimonial-quote img{
-      border:3px solid #9CC1D3; border-radius:50%;
-      display:block; width:120px; height:120px;
-      position:absolute; top:-.2em; left:0;
-    }
-    .testimonial-quote cite{
-      color:#4a4a4a;
-      display:block;
-      font-size:.8em;
-    }
-    .testimonial-quote cite span{
-      color:#2f2f2f;
-      font-size:1em;
-      font-style:normal;
-      font-weight:700;
-      letter-spacing:1px;
-      text-transform:uppercase;
-      text-shadow:0 1px snow;
-    }
-
-    /* Higher user-requested contrast */
-    @media (prefers-contrast: more){
-      .testimonial-quote blockquote{ color:#3a3a3a; }
-      .testimonial-quote blockquote p{ color:#3a3a3a; }
-      .h2-quote{ color:#003844; }
-    }
-
-    /* =========================
-       Uniform image cards
-       Use on wrapper: <figure class="image-card Main|Left|Right">
-    ========================= */
-    .image-card{
-      background:var(--frame-bg);
-      border:1px solid var(--frame-border);
-      box-shadow:0 1px 3px rgba(0,0,0,.2);
-      margin:1rem 0;
-    }
-    .image-card .image-body{
-      padding:8px;
-      background:#fff; /* white mat around the image */
-    }
-    .image-card .image-body img{
-      display:block;
-      width:100%;
-      height:auto;
-    }
-    .image-card .image-caption{
-      background:var(--frame-caption-bg);
-      border-top:1px solid #e2e2e2;
-      color:var(--frame-text);
-      font-size:90%;
-      line-height:1.5;
-      padding:.75rem .9rem;
-    }
-
-    /* Clear helper when wrapping text around floated image cards */
+    /* Image cards */
+    .image-card{ background:var(--frame-bg); border:1px solid var(--frame-border); box-shadow:0 1px 3px rgba(0,0,0,.2); margin:1rem 0; }
+    .image-card .image-body{ padding:8px; background:#fff; }
+    .image-card .image-body img{ display:block; width:100%; height:auto; }
+    .image-card .image-caption{ background:var(--frame-caption-bg); border-top:1px solid #e2e2e2; color:var(--frame-text); font-size:90%; line-height:1.5; padding:.75rem .9rem; }
     .image-clear{ clear:both; }
-
-    /* Layout variants (md+ ≈ Bootstrap md) */
     @media (min-width:768px){
-      .image-card.Left{
-        float:left;
-        width:50%;
-        margin:0 1rem 1rem 0;
-      }
-      .image-card.Right{
-        float:right;
-        width:50%;
-        margin:0 0 1rem 1rem;
-      }
-      .image-card.Main{
-        float:none;
-        width:100%;
-        margin:1rem 0;
-      }
+      .image-card.Left{ float:left; width:50%; margin:0 1rem 1rem 0; }
+      .image-card.Right{ float:right; width:50%; margin:0 0 1rem 1rem; }
+      .image-card.Main{ float:none; width:100%; margin:1rem 0; }
     }
 
-    /* === NEW: bio container === */
-    .bio-card{
-      background:var(--frame-bg);
-      border:1px solid var(--frame-border);
-      box-shadow:0 1px 3px rgba(0,0,0,.2);
-      padding:1rem 1.25rem;
-      margin:1rem 0 0;
-    }
+    /* Bio container */
+    .bio-card{ background:var(--frame-bg); border:1px solid var(--frame-border); box-shadow:0 1px 3px rgba(0,0,0,.2); padding:1rem 1.25rem; margin:1rem 0 0; }
 </style>
 
 

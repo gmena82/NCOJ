@@ -1,284 +1,57 @@
-# NCOJ / Training Items — Clean HTML Conversion (Codex-Operated)
+## NCOJ Article Swap Playbook – Now with Reliable CSS, Header Roles, PDF & Feature Image
 
-This README defines the exact steps Codex must follow to convert NCO Journal (NCOJ) source files into a publish-ready, text-focused HTML artifact (`*--CLEAN.html`).
-
-> **Strict rule:** Do **not** paraphrase or rewrite content. Only fix truly obvious artifacts (for example, a URL broken by line wrapping, or a clearly missing terminal period). When you make such a micro-fix, state it under **Flags** in your commit message.
-
----
-
-## Repository locations (inputs and output)
-
-All files for each article live in the `Training Items/` folder:
-
-- `Training Items/<Something-TM>.html` — manuscript or "TM"/template content.
-- `Training Items/<Something-DW>.html` — "Actual/DW" site version (older Bootstrap).
-- `Training Items/<Something-UA>.pdf` — companion PDF (optional cross-check only).
-
-**Target output created by Codex for each article:**
-
-- `Training Items/<Full Article Title>--CLEAN.html`
-
-Keep the output alongside the inputs in `Training Items/`. Do **not** add new folders unless directed.
-
----
-
-## Output requirements (CLEAN HTML)
-
-Produce an HTML5 document with no site CSS blocks and no content images/captions. Exceptions and whitelist below are intentional to preserve site behavior.
-
-### Allowed tags
-
-`<!DOCTYPE html>`, `<html lang="en">`, `<head>`, `<meta charset="utf-8">`, `<title>`, `<body>`, `<article>`, `<header>`, `<section>`, `<footer>` (only when explicitly instructed), `<h1>`, `<h2>`, `<h3>`, `<p>`, `<em>`, `<strong>`, `<a>`, `<span>`, and `<div>` (Bio well only), and the PDF-button icon `<img>` inside the header link.
-
-### Disallowed content
-
-- All content images, image captions, social links, QR codes, panels/wells for images, and layout scaffolding.
-- Any CSS `<style>` blocks or external CSS `<link>` tags in the article file.
-
-### Class & attribute whitelist (use only these, exactly where stated)
-
-- **PDF button (header):**
-  ```html
-  <a class="btn btn-xs btn-primary"
-     title="Download the PDF"
-     target="_blank"
-     onclick="_gaq.push(['_trackEvent','PDF Blue Button Download','Click', this.href]);">
-    Download the PDF <img src="/portals/7/Images/pdficon_small.png" alt=""/>
-  </a>
-  ```
-- **References:** each entry is `<p class="reference">…<a …>URL</a></p>`.
-  - Every reference link must include `target="_blank"` and `onclick="_gaq.push(['_trackEvent','Notes Link','Click', this.href]);"`.
-- **Author Bio well:**
-  - Add `<span id="bio">&nbsp;</span>` immediately before the bio.
-  - Wrap the bio text in `<div class="well well-lg panel-shadow">` and place the copy inside `<p class="small">…</p>`.
-- No other classes or attributes are allowed. We intentionally omit `rel="noopener"` on these anchors to match current site behavior.
-
----
-
-## Required structure
-
+**What editors type (minimal header):**
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>{Article Title}</title>
-</head>
-<body>
-  <article id="{kebab-slug}">
-    <header>
-      <h1>{Article Title}</h1>
-      <!-- If the article has a deck/subtitle, keep it as an H2 directly under the H1 -->
-      <h2>{Optional Deck/Subtitle}</h2>
-
-      <p><strong>By {Rank First M. Last}</strong></p>
-      <p>{Affiliation}</p>
-      <p>{Month DD, YYYY}</p>
-
-      <p>
-        <a href="{insert PDF link here}"
-           title="Download the PDF"
-           class="btn btn-xs btn-primary"
-           onclick="_gaq.push(['_trackEvent','PDF Blue Button Download','Click', this.href]);"
-           target="_blank">
-          Download the PDF <img alt="" src="/portals/7/Images/pdficon_small.png"/>
-        </a>
-      </p>
-    </header>
-
-    <!-- Sections in source order; use <h3> for section headings when present -->
-    <section>
-      <h3>Introduction</h3>
-      <p>{…}</p>
-    </section>
-
-    <!-- …repeat sections as needed… -->
-
-    <!-- References -->
-    <section aria-labelledby="references">
-      <h3 id="references">References</h3>
-
-      <!-- Each entry is ONE paragraph with class="reference". Use <em> for titles. -->
-      <p class="reference">
-        Department of the Army. (2025). <em>Foot Marches</em> (ATP 3-21.18).
-        <a href="https://armypubs.army.mil/ProductMaps/PubForm/Details.aspx?PUB_ID=1031491"
-           onclick="_gaq.push(['_trackEvent','Notes Link','Click', this.href]);"
-           target="_blank">https://armypubs.army.mil/ProductMaps/PubForm/Details.aspx?PUB_ID=1031491</a>
-      </p>
-      <!-- …add one <p class="reference"> per citation… -->
-    </section>
-
-    <!-- Author Bio (no heading) -->
-    <span id="bio">&nbsp;</span>
-    <div class="well well-lg panel-shadow">
-      <p class="small"><strong>{Rank First M. Last}</strong> {Bio text…}</p>
-    </div>
-
-    <!-- Footer/Disclaimer: OMIT in CLEAN; editorial inserts this later -->
-  </article>
-</body>
-</html>
+<header>
+  <h1>Article Title</h1>
+  <p><strong>By Full Name</strong></p>               <!-- author -->
+  <p>Unit / Organization</p>                         <!-- org -->
+  <p>Month DD, YYYY</p>                              <!-- date -->
+  <!-- Optional: paste the official PDF button here. If omitted, the swapper inserts a template. -->
+</header>
 ```
 
-### Kebab-slug generation (for `<article id="…">`)
+**What the swapper guarantees automatically**
+- **CSS present:** Injects the standard inline CSS before `</head>` (fallback: top of `<body>`, then top of document).
+- **No dependency on `.container-fluid`.**
+- **Header roles:** Converts header lines into:
+  - `<h3 class="author">By …</h3>`
+  - `<h4 class="org">…</h4>`
+  - `<p class="pubdate">Month DD, YYYY</p>` (or inserts a `(date goes here)` placeholder)
+  - Adds `class="article-header"` to `<header>` if missing.
+- **PDF button:** Ensures a Download the PDF button sits right after the date.
+  - If a valid PDF button is already present (detects `pdficon_small.png` or “Download the PDF”), it doesn’t duplicate; it tags that spot internally.
+  - If missing, inserts `templates/snippets/pdf-button.html` with `(PDF link here)` placeholder.
+- **Feature/Main image:** Hoists the first Main image card to immediately follow the PDF button.
+  - If you used `[photo main]`, it’s expanded and hoisted there.
+  - If no Main image exists, it inserts a placeholder Main card:
+    ```html
+    <figure class="image-card Main">…</figure>
+    ```
+- **Left/Right images:** `[photo left]` / `[photo right]` tokens become framed image cards and the swapper inserts `<div class="image-clear"></div>` after each to end text wrapping.
+- **References:** Under `<h3>References</h3>`, it:
+  - wraps each entry as `<p class="reference">…</p>` (hanging indent is in CSS),
+  - changes `<span>…</span>` titles to `<em>…</em>`,
+  - adds `target="_blank"`, `rel="noopener"` and the GA click handler to links.
+- **Bio:** If no bio exists, inserts `templates/snippets/bio.html` right after References (or end of article as fallback). Fill `(name)` and `(bio)`.
 
-1. Unicode NFKD normalize and remove diacritics.
-2. Lowercase the string.
-3. Replace any run of non-`[a-z0-9]` characters with a single hyphen `-`.
-4. Collapse multiple hyphens to one.
-5. Trim leading/trailing hyphens.
-
-**Examples**
-
-- `Pounds for Pain` → `pounds-for-pain`
-- `The Power of Stability` → `the-power-of-stability`
-
----
-
-## Source precedence (what to trust for what)
-
-When multiple inputs exist, use this order:
-
-1. **DW/Actual HTML** — authoritative for title/byline/affiliation/date, section order, reference text, and the blue PDF button pattern.
-2. **TM/Manuscript HTML** — base narrative when DW is absent; also a cross-check.
-3. **PDF** — only to verify bio or references or to resolve obvious breaks (for example, a URL wrapped across lines).
-
-If the exact portal path for the PDF is unknown at conversion time, keep `href="insert PDF link here"` as a placeholder and note it under **Flags** in the commit.
-
----
-
-## Editing rules
-
-- Never paraphrase or modernize terms.
-- Remove all image captions, photo credits, QR-code notes, social links, and image-only paragraphs.
-- Allowed micro-fixes only (must be flagged):
-  - Join URLs split by line wraps.
-  - Add a clearly missing sentence-ending period.
-
----
-
-## Definition of Done (DoD)
-
-### Header & Metadata
-
-- [ ] `<title>` equals `<h1>`.
-- [ ] Byline, affiliation, and date match DW/Actual exactly.
-- [ ] Deck/subtitle appears as `<h2>` directly under `<h1>` when present.
-- [ ] PDF blue button present with exact classes and analytics `onclick`; includes the small PDF icon image.
-
-### Body & Structure
-
-- [ ] Section order matches source.
-- [ ] No content images, captions, social links, or QR codes remain.
-
-### References
-
-- [ ] References heading present.
-- [ ] Each entry is one `<p class="reference">…</p>`; book/report titles wrapped in `<em>`.
-- [ ] Each reference URL anchor includes `target="_blank"` and the analytics `onclick` with label `Notes Link`.
-
-### Author Bio
-
-- [ ] A `<span id="bio">` anchor exists.
-- [ ] Bio is rendered as `<div class="well well-lg panel-shadow"><p class="small">…</p></div>`.
-- [ ] No "Author Bio" heading is added.
-
-### Classes & Attributes
-
-- [ ] Only whitelisted classes appear (`btn btn-xs btn-primary`, `reference`, `well well-lg panel-shadow`, `small`).
-- [ ] Only whitelisted `onclick` patterns appear (PDF: `PDF Blue Button Download`; References: `Notes Link`).
-- [ ] Footer/disclaimer is omitted in CLEAN (editorial inserts this later).
-
-### Content integrity
-
-- [ ] No paraphrasing; only micro-fixes allowed and flagged in the commit.
-
----
-
-## Quick validation (optional, local)
-
-```bash
-FILE="Training Items/<Full Article Title>--CLEAN.html"
-
-# Fail if style/link stylesheet blocks or content images slipped in
-grep -nE '<style|<link[^>]+stylesheet' "$FILE" && { echo "❌ CSS detected"; exit 1; }
-grep -nE '<img(?![^>]*pdficon_small\.png)' "$FILE" && { echo "❌ Content image detected"; exit 1; }
-
-# Whitelist class check (flag anything not in the set)
-grep -oE 'class="[^"]+"' "$FILE" | grep -vE \
-'class="btn btn-xs btn-primary"|class="reference"|class="well well-lg panel-shadow"|class="small"' \
-&& echo "⚠️ Non-whitelisted class detected" || echo "✅ Class whitelist OK"
-
-# Check analytics onclick usage
-grep -q "_gaq.push(['_trackEvent','PDF Blue Button Download','Click'" "$FILE" && \
-grep -q "_gaq.push(['_trackEvent','Notes Link','Click'" "$FILE" \
-&& echo "✅ Analytics onclicks OK" || echo "⚠️ Missing required onclicks"
+**Image tokens editors can use in body text**
+```text
+[photo main]
+[photo left]
+[photo right]
 ```
 
----
+**Runner commands**
+- Node: `node tools/article_swapper.js input.html output.html`
+- Python: `python tools/article_swapper.py input.html output.html`
 
-## Commit guidance for Codex
+**Snippets to edit**
+- PDF button: `templates/snippets/pdf-button.html` → replace `(PDF link here)`
+- Images: replace `(image link here)`, `(image alt text here)`, `(image caption here)`
+- Bio: replace `(name)` and `(bio)`
 
-- **Message:** `add(clean): {kebab-slug} (text-only with PDF button, p.reference, bio well)`
-- **Flags:**
-  - “Inserted placeholder PDF href” or “Set PDF href to UA path”.
-  - Any micro-fixes (for example, “rejoined ADP URL”, “added missing period in final paragraph”).
-
-## Article Swap Playbook (NCOJ Standard)
-
-**What editors type**
-- Put simple photo tokens in the article body:
-  - `[photo main]`
-  - `[photo left]`
-  - `[photo right]`
-
-**What the code swapper does**
-1. Injects the standard NCOJ CSS inline at the top of the HTML from:
-   - `templates/article-style-inline.css.html`
-2. Replaces tokens with a uniform framed image container:
-   - `templates/snippets/image-card-Main.html`
-   - `templates/snippets/image-card-Left.html`
-   - `templates/snippets/image-card-Right.html`
-3. Leaves placeholders:
-   - `(image link here)` `(image alt text here)` `(image caption here)`
-4. After `Left`/`Right`, inserts `<div class="image-clear"></div>` so text stops wrapping.
-
-**Where the CSS goes**
-- The entire `<style> … </style>` block is inserted **before** the first `<div class="container-fluid">` (or at the very top if not found).
-
-**508 notes**
-- Provide meaningful `alt` text (no “image of …”). Visible focus rings and color contrast are already handled in the CSS.
-
-**Running the swapper**
-- **Node**: `node tools/article_swapper.js input.html output.html`
-- **Python**: `python tools/article_swapper.py input.html output.html`
-
-## Header → PDF → Main Image (Auto placement)
-
-**Editors can keep the header minimal**:
-- `<h1>Title…</h1>`
-- `<p>By Full Name</p>` → swapper upgrades to `<h3 class="author">By …</h3>`
-- `<p>Unit / Organization</p>` → swapper upgrades to `<h4 class="org">…</h4>`
-- If no date provided, the swapper inserts `<p class="pubdate">(date goes here)</p>`
-
-**PDF button (auto)**
-- The swapper inserts a **Download the PDF** button **right after the date** using `templates/snippets/pdf-button.html`.
-- The href is a placeholder: **`(PDF link here)`** — editor replaces it with the real PDF path.
-- The icon path remains the same: `/portals/7/Images/pdficon_small.png`.
-
-**Main (Feature) image (auto)**
-- The swapper places the first **Main** image **immediately after the PDF button**.
-- If you used `[photo main]`, it will be expanded and hoisted there.
-- If you didn’t include a Main image token, the swapper inserts a **placeholder Main** image card with:
-  - `(image link here)`, `(image alt text here)`, `(image caption here)`
-- Left/Right images remain where you place their tokens in the body; the swapper inserts `<div class="image-clear"></div>` after them.
-
-**References (auto)**
-- Use `<h3>References</h3>` then simple `<p>…</p>`. The swapper will:
-  - Convert to `<p class="reference">…</p>` (hanging indent)
-  - Convert any `<span>…</span>` titles to `<em>…</em>`
-  - Add `target="_blank" rel="noopener"` and GA `onclick` to links.
-
-**Bio (auto if missing)**
-- If there’s no bio, the swapper inserts `templates/snippets/bio.html` **right after the References section**.  
-  Fill in `(name)` and `(bio)`.
+**CSS classes you can rely on in outputs**
+- Header roles: `.author`, `.org`, `.pubdate`, optional `.subtitle`
+- Image cards: `.image-card.Main` | `.Left` | `.Right`, `.image-body`, `.image-caption`, `.image-clear`
+- Utilities: `.reference`, `.small-text`, `.panel-shadow`, etc.
