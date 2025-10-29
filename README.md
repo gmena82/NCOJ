@@ -1,89 +1,160 @@
-# NCOJ Article Swap – Training
+# NCOJ Article Swap – Training & Rules
 
-## Editor Rules (ELI5)
+This training ensures every article gets the **same NCOJ look**, stays **AFPIMS/Bootstrap** compatible, and remains **508-friendly**.
 
-**Minimal header**:
+---
+
+## Editor Input (ELI5)
+
+Minimal header that editors paste into AFPIMS:
 ```html
 <header>
   <h1>Article Title</h1>
-  <p><strong>By Full Name</strong></p>       <!-- author -->
-  <p>Unit / Organization</p>                 <!-- org -->
-  <p>Month DD, YYYY</p>                      <!-- date -->
-  <!-- PDF button optional. If omitted, the swapper inserts one. -->
+  <p><strong>By Full Name</strong></p>   <!-- author -->
+  <p>Unit / Organization</p>             <!-- org -->
+  <p>Month DD, YYYY</p>                  <!-- date -->
+  <!-- PDF button optional; swapper will add if missing -->
 </header>
 ```
 
-Images (use tokens in the body):
-```text
+Body images use tokens (don’t hand-build figures):
+
 [photo main]
 [photo left]
 [photo right]
-```
+
+
+References (plain paragraphs – no classes needed):
+
+<h3>References</h3>
+<p>Author, A. (Year). Title. <a href="https://example.com">https://example.com</a></p>
+
+
+Bio (optional). If you skip it, the swapper inserts a placeholder after References.
+
+What the swapper ALWAYS does (in order)
+
+Inline CSS is injected before </head> (fallback: top of <body>, then top of document).
+Idempotent (uses a hidden sentinel so we never double-inject).
+
+Header normalization
+
+Any By… line → <h3 class="author">By …</h3> (accepts By:, By —, BY etc.)
+
+Next line → <h4 class="org">…</h4>
+
+Next line → <p class="pubdate">Month DD, YYYY</p> (or inserts (date goes here))
+
+Ensures <header class="article-header">…</header>
+
+PDF button goes right after the date.
+
+If present already (detects “Download the PDF” or pdficon_small.png), no duplicate.
+
+If missing, inserts templates/snippets/pdf-button.html with (PDF link here) placeholder.
+
+Feature/Main image is hoisted to immediately follow the PDF button.
+
+If none exists, inserts a Main placeholder (change link/alt/caption later).
+
+Image tokens expand into framed cards with uniform caption area & subtle shadow.
+
+Left/Right get a trailing <div class="image-clear"></div> to stop text wrapping.
+
+References under <h3>References</h3> are normalized:
+
+each entry → <p class="reference">…</p> (hanging indent)
+
+book/report titles: <span>…</span> → <em>…</em>
+
+every link gets target="_blank" rel="noopener" and GA click handler:
+
+onclick="_gaq.push(['_trackEvent','Notes Link','Click', this.href]);"
+
+
+Bio appears after the last reference paragraph (or end of article if no refs).
+
+Final cleanup removes internal markers and extra blank lines.
+
+Definition of Done (quick checklist)
+
+Head:
+
+ <style>…</style> block present before </head> (NCOJ CSS)
+
+Header block:
+
+ <h3 class="author">By …</h3>
+
+ <h4 class="org">…</h4>
+
+ <p class="pubdate">Month DD, YYYY</p> or (date goes here)
+
+ PDF button directly under the date
+
+Feature image:
+
+ Exactly one Main image card directly under the PDF button
+
+Body images:
+
+ Left/Right images are framed and followed by <div class="image-clear"></div>
 
 References:
-```html
-<h3>References</h3>
-<p>Plain reference line … <a href="https://…">https://…</a></p>
-```
-(No need to add classes or italics—the swapper does that.)
 
-Bio: If you don’t include one, the swapper adds a bio box after References.
+ Heading is <h3>References</h3>
 
-## What the swapper ALWAYS does (in order)
-1. **Injects CSS** into `<head>` (fallback `<body>` or top) – idempotent via sentinel.
-2. **Normalizes header** → `<h3 class="author">`, `<h4 class="org">`, `<p class="pubdate">`.
-3. **Places PDF button** under the date (dedupe-safe).
-4. **Hoists Feature (Main) image** under the PDF; inserts a placeholder if none found.
-5. **Expands image tokens** into framed `.image-card` containers; Left/Right get a trailing `<div class="image-clear"></div>`.
-6. **Formats References**:
-   - each line becomes `<p class="reference">…</p>` (hanging indent)
-   - `<span>` titles become `<em>`
-   - anchors get `target="_blank"` `rel="noopener"` + GA onclick
-7. **Ensures Bio** directly after the last reference (or end if no refs).
-8. **Final cleanup** removes internal markers and extra blank lines.
+ All entries are <p class="reference">…</p>
 
-## Do / Don’t (so Codex isn’t confused)
-✅ Do type By Full Name as a plain `<p>` (with/without `<strong>`).
-✅ Do provide org and date as plain `<p>` lines.
-✅ Do use `[photo main|left|right]` tokens.
-✅ Do paste your own PDF button if you have one; the swapper won’t duplicate it.
-❌ Don’t hand-build `.image-card` unless necessary—use tokens.
-❌ Don’t add `class="reference"` or hand italics in citations.
-❌ Don’t modify Bootstrap/AFPIMS templates.
+ Links have GA onclick + target="_blank" rel="noopener"
 
-## Definition of Done (quick checklist)
-**Head:**
-- Inline CSS `<style>…</style>` is present before `</head>`.
+Bio:
 
-**Header:**
-- `<h3 class="author">By …</h3>`
-- `<h4 class="org">…</h4>`
-- `<p class="pubdate">Month DD, YYYY</p>` *(or (date goes here))*
-- PDF button directly under the date
+ Bio card appears after the last reference
 
-**Images:**
-- Exactly one Main image card under the PDF
-- Left/Right images have captions and a following `.image-clear`
+508 spot checks:
 
-**References:**
-- `<h3>References</h3>` followed by only `<p class="reference">…</p>` entries
-- Links have analytics + `target="_blank"` + `rel="noopener"`
+ Every <img> has meaningful alt
 
-**Bio:**
-- Bio card appears after the last reference
+ Focus ring visible on links/buttons (TAB through)
 
-## Snippets editors will fill
-- PDF: `templates/snippets/pdf-button.html` → replace only `(PDF link here)`
-- Images: replace `(image link here)`, `(image alt text here)`, `(image caption here)`
-- Bio: replace `(name)` and `(bio)`
+Where things live (repo layout)
 
-## Runners
-- Node: `node tools/article_swapper.js input.html output.html`
-- Python: `python tools/article_swapper.py input.html output.html`
+templates/article-style-inline.css.html – injected NCOJ CSS (tokens, utilities, image cards, header classes).
 
-## Classes guaranteed in the output
-- Header: `.author`, `.org`, `.pubdate`, optional `.subtitle`
-- Images: `.image-card.Main` | `.Left` | `.Right`, `.image-body`, `.image-caption`, `.image-clear`
-- References: `.reference` (hanging indent)
-- PDF button: `.btn.btn-xs.btn-primary`
-- Bio: `.bio-card.panel-shadow`
+templates/snippets/pdf-button.html – standard AFPIMS/Bootstrap PDF button (fill (PDF link here)).
+
+templates/snippets/image-card-*.html – Main, Left, Right image card snippets.
+
+✅ Tools now support both image-card-main.html and image-card-Main.html (same for left/Left, right/Right).
+
+templates/snippets/bio.html – bio card snippet.
+
+tools/article_swapper.js / tools/article_swapper.py – Node/Python transformers (identical behavior).
+
+training-items/ – example New-Original-Input.html and New-Output.html.
+
+Running the swapper
+
+Node:
+
+node tools/article_swapper.js input.html output.html
+
+
+Python:
+
+python tools/article_swapper.py input.html output.html
+
+Snippets you edit (and only these placeholders)
+
+PDF: templates/snippets/pdf-button.html → set (PDF link here)
+
+Images: each image card → (image link here), (image alt text here), (image caption here)
+
+Bio: templates/snippets/bio.html → (name) and (bio)
+
+Why we don’t change Bootstrap or AFPIMS
+
+We honor the platform. The swapper adds a thin, self-contained inline CSS layer and transforms HTML without modifying the underlying AFPIMS or Bootstrap version.
+
+---
