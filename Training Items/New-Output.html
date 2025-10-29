@@ -1,0 +1,193 @@
+<style>
+  /* =========================
+     Tokens
+  ========================= */
+  :root{
+    --brand-gold:#ffc600;
+    --brand-black:#000;
+    --brand-blue:#004a5c;
+    --frame-bg:#f8f8f8;
+    --frame-border:#dddddd;
+    --frame-caption-bg:#f1f1f1;
+    --frame-text:#4a4a4a;
+  }
+
+  /* =========================
+     Base type and spacing
+  ========================= */
+  p{ font-size:1.2em; line-height:1.6; }
+  blockquote p{ font-size:1em; }
+
+  /* headings default bold for legacy NCOJ */
+  h1,h2,h3,.inline-head{ font-weight:bold; }
+  h2{ font-size:1.5em; margin:-5px 0 0; }
+  h4{ margin:5px 0 3px 0; color:#000; }
+
+  /* Heading adjacency spacing */
+  h1 + h4, h2 + h4 { margin:25px 0 15px; }
+  h3 + h4, h4 + h4, h4 + h5, h5 + h5 { margin:-10px 0 15px; }
+
+  /* Utilities */
+  .normal-text{ font-style:normal; }
+  .body-lr-indent{ margin:0 8rem 2rem; }
+  p.textindent-2{ text-indent:2rem; }
+  p.textindent-4{ text-indent:4rem; }
+  .indented{ padding-left:3rem; padding-right:3rem; }
+  .margin{ margin:1em; }
+  .no-pad{ padding:0; }
+  .small-text{ font-size:90%; }
+  .large-text{ font-size:150%; }
+  .big-li-text, .liitem{ font-size:1.2em; line-height:1.6; }
+  .liitem{ margin-left:1em; margin-bottom:1.5em; }
+  .text-right{ text-align:right; }
+  .text-center{ text-align:center; }
+  .download-pdf{ margin:10px 0; }
+
+  /* Hanging indent for references */
+  .reference{ text-indent:-1em; margin-left:2em; }
+
+  /* Quotes / callouts */
+  .h2-quote{ margin:2em 0; padding:0; color:var(--brand-blue, #004a5c); }
+  .q, .q-blue{ font-family:'Old Standard TT', serif; font-weight:bold; }
+  .q{ font-size:1.5em; }
+  .q-blue{ font-size:1.75em; color:blue; }
+
+  /* Panels / borders / outlines (legacy helpers if needed) */
+  .panel-shadow{ box-shadow:0 1px 3px rgba(0,0,0,.2); }
+  .panel-border{ border:4px solid #000; }
+  .outline{
+    margin:0;
+    padding:4rem;
+    border:1px solid #ccc;
+    outline-style:double;
+    outline-color:#d3d3d3;
+  }
+
+  /* Text shadows */
+  .text-shadow{  text-shadow:1px 1px 2px rgba(0,0,0,.4); }
+  .text-shadow2{ text-shadow:2px 2px 2px rgba(0,0,0,.4); }
+
+  /* Buttons */
+  .btn-black,
+  .btn-black:link,
+  .btn-black:visited,
+  .btn-black:focus,
+  .btn-black:active{
+    color:var(--brand-gold,#ffc600);
+    background-color:var(--brand-black,#000);
+    border:1px solid yellow;
+  }
+  .btn-black:hover{ color:#fff; }
+  .btn-black:focus-visible{ outline:3px solid #ffc600; outline-offset:2px; }
+
+  /* Fancy button (508) */
+  .fancy-button{
+    background:#f2f2f2; border:1px solid #ccc; color:#111;
+    padding:15px 32px; text-align:center; text-decoration:none;
+    display:inline-block; font-size:16px; margin:4px 2px; cursor:pointer;
+    transition:box-shadow .2s ease, transform .1s ease;
+  }
+  .fancy-button:hover{ box-shadow:0 12px 16px rgba(0,0,0,.24), 0 17px 50px rgba(0,0,0,.19); }
+  .fancy-button:focus-visible{ outline:3px solid #1a73e8; outline-offset:2px; }
+
+  a:focus-visible{ outline:3px solid #1a73e8; outline-offset:2px; }
+
+  .indent{ padding-left:18%; }
+  .Narration-icon{ width:30px; height:30px; display:inline-block; margin-left:0; }
+
+  /* Subtitle */
+  .subtitle{ font-size:1.75em; font-weight:normal; line-height:1.25; margin:.25em 0 .6em; }
+
+  /* Header roles */
+  .author{ color:#000; margin:0.2em 0 0.4em; }
+  .org{ color:#000; margin:0.2em 0 0.6em; }
+  .pubdate{ margin:0.2em 0 1em; }
+
+  /* Image cards */
+  .image-card{ background:var(--frame-bg); border:1px solid var(--frame-border); box-shadow:0 1px 3px rgba(0,0,0,.2); margin:1rem 0; }
+  .image-card .image-body{ padding:8px; background:#fff; }
+  .image-card .image-body img{ display:block; width:100%; height:auto; }
+  .image-card .image-caption{ background:var(--frame-caption-bg); border-top:1px solid #e2e2e2; color:var(--frame-text); font-size:90%; line-height:1.5; padding:.75rem .9rem; }
+  .image-clear{ clear:both; }
+  @media (min-width:768px){
+    .image-card.Left{ float:left; width:50%; margin:0 1rem 1rem 0; }
+    .image-card.Right{ float:right; width:50%; margin:0 0 1rem 1rem; }
+    .image-card.Main{ float:none; width:100%; margin:1rem 0; }
+  }
+
+  /* Bio container */
+  .bio-card{ background:var(--frame-bg); border:1px solid var(--frame-border); box-shadow:0 1px 3px rgba(0,0,0,.2); padding:1rem 1.25rem; margin:1rem 0 0; }
+</style>
+
+<header class="article-header">
+<h1>Pounds for Pain</h1>
+<h3 class="author">By Master Sgt. Matthew M. McLemore</h3>
+<h4 class="org">Soldier Requirements Division, Maneuver Capabilities Development and Integration Directorate</h4>
+<p class="pubdate">(date goes here)</p>
+<p class="download-pdf">
+<a href="(PDF link here)" title="Download the PDF" class="btn btn-xs btn-primary"
+   onclick="_gaq.push(['_trackEvent','PDF Blue Button Download','Click', this.href]);"
+   target="_blank" rel="noopener">
+  Download the PDF <img alt="" src="/portals/7/Images/pdficon_small.png"/>
+</a>
+</p>
+
+<figure class="image-card Main">
+<div class="image-body">
+  <img class="img-responsive" src="(image link here)" alt="alt text here.">
+</div>
+<figcaption class="image-caption">image caption here.</figcaption>
+</figure>
+
+</header>
+
+<p><em>“Ounces lead to pounds, and pounds lead to pain.”</em></p>
+<p>Soldiers hear the phrase above throughout military training. The maxim reflects a foundational principle in managing Soldier load: Maintaining a balance between lethality, survivability, mobility, and situational awareness is critical to battlefield success. Viewing the rifle squad or Soldier as a system, these components require proper handling for combat effectiveness.</p>
+<p>Historically, the Army has prioritized lethality and protection over mobility, leading Soldiers to carry excessive loads. Summarized as “better to have it and not need it,” this approach negatively impacts mobility and situational awareness. Leaders must address Soldier load to improve combat agility and optimize health.</p>
+<h3>The Importance of Managing Soldier Load</h3>
+<p>Often tasked with carrying heavier equipment than Soldiers of the past, today’s rifle squad faces unprecedented challenges. While lighter equipment and weapons are highly desirable, evolving threats and emerging capability requirements make achieving this balance complex. Managing Soldier load requires leaders to understand doctrinal recommendations, assess their formations, and implement changes to improve combat effectiveness.</p>
+<p>According to ATP 3-21.18, <em>Foot Marches</em>, “Understanding that ounces can add up to pounds and pounds impact performance, commanders ensure the equipment Soldiers carry during the mission is essential and must be carried” (Department of the Army, 2025, p. 3-17). Doctrine emphasizes that Soldier load management is the shared responsibility of commanders and subordinate leaders, ensuring units carry only mission-essential items.</p>
+
+<figure class="image-card Left">
+<div class="image-body">
+  <img class="img-responsive" src="(image link here)" alt="alt text here.">
+</div>
+<figcaption class="image-caption">image caption here.</figcaption>
+</figure>
+<div class="image-clear"></div>
+
+<h3>The Two Primary Soldier Loads</h3>
+<p>Two primary types of Soldier loads exist in doctrine: the <em>fighting load</em> and the <em>approach march load</em>.</p>
+<p><strong>Fighting Load:</strong> This includes the essential items Soldiers need to maneuver, close with, and destroy enemy forces in direct contact. Doctrinally, the fighting load shouldn’t exceed 30% of a Soldier’s body weight.</p>
+<p><strong>Approach Load:</strong> This consists of the fighting load plus additional equipment Soldiers can leave at an objective rally point (ORP), such as rucksacks or assault packs.</p>
+<p>The approach load should ideally not exceed 45% of a Soldier’s body weight. For example, a nine-Soldier rifle squad with an average body weight of 170 pounds would have individual fighting and approach loads of approximately 55 and 84 pounds, respectively. However, data indicates that approach loads often exceed 1,061 pounds per squad, significantly more than doctrinal recommendations.</p>
+<h3>Implementing Change Today</h3>
+<p>Leaders at all levels must address Soldier load challenges in their formations. While achieving doctrinal weight standards may not always be feasible, prioritizing efforts to reduce unnecessary weight is critical.</p>
+<h3>Key Steps for Leaders:</h3>
+<p><strong>Assess and Adjust:</strong> Conduct equipment shakedowns before and after missions to identify redundant or nonessential items. Regularly evaluate whether Soldiers carry unnecessary “creature comforts” or duplicative equipment.</p>
+<p><strong>Cross-Load Effectively:</strong> Redistribute gear across the squad to achieve balanced weights based on Soldiers’ body weights and physical capabilities. Ensure Soldiers assigned to positions, such as automatic riflemen, can realistically manage their duties without overburdening.</p>
+<p><strong>Leverage Technology:</strong> Stay informed about advancements in lightweight body armor, advanced power sources, and high-tech communications systems. Emerging technologies like exoskeletons may offer long-term solutions to lighten the load while enhancing combat effectiveness.</p>
+<p><strong>Prioritize Soldier Well-Being:</strong> Excessive loads increase the risk of injury and fatigue, which impair cognitive and physical performance. Leaders must prioritize access to nutrition, fitness programs, mental health resources, and opportunities for rest and recovery. Doctrine provides detailed guidance for optimizing Soldier load, including recommendations for march velocity, load placement, packing lists, and body mechanics.</p>
+
+<figure class="image-card Right">
+<div class="image-body">
+  <img class="img-responsive" src="(image link here)" alt="alt text here.">
+</div>
+<figcaption class="image-caption">image caption here.</figcaption>
+</figure>
+<div class="image-clear"></div>
+
+<p>Leaders must educate their formations on this guidance and incorporate it into mission planning. By fostering a culture of load discipline, leaders set the standard for effective resource management.</p>
+<h3>Conclusion</h3>
+<p>By adhering to doctrinal guidance, leveraging technology, and prioritizing Soldier well-being, leaders can enhance Soldier load management and ensure their formation’s combat effectiveness.</p>
+<p>Such a solution requires an educated, systematic approach by leaders, who share the responsibility to ensure Soldiers carry only equipment essential for mission success. Through thoughtful planning, assessment, and innovation, leaders can address Soldier load challenges and better prepare their squads for the demands of modern warfare.</p>
+
+<h3>References</h3>
+<p class="reference">Department of the Army. (2025). <em>Foot Marches</em> (ATP 3-21.18). <a href="https://armypubs.army.mil/ProductMaps/PubForm/Details.aspx?PUB_ID=1031491" target="_blank" rel="noopener" onclick="_gaq.push(['_trackEvent','Notes Link','Click', this.href]);">https://armypubs.army.mil/ProductMaps/PubForm/Details.aspx?PUB_ID=1031491</a></p>
+
+<span id="bio"></span>
+<div class="bio-card panel-shadow">
+<p class="small-text">
+  <strong>Master Sgt. Matthew M. McLemore</strong> is senior enlisted advisor for the Soldier Requirements Division, Maneuver Capabilities Development and Integration Directorate (Army Futures Command). He has served in a variety of assignments and leadership positions in the infantry for two decades, ranging from fire team leader to company first sergeant. His current role is to advocate for the Close Combat Force during the capability development and acquisition process of next-generation weapons and equipment. He holds a Bachelor of Science degree in organizational leadership from the University of Charleston, West Virginia.
+</p>
+</div>
