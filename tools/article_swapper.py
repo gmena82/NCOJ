@@ -9,7 +9,11 @@ RIGHT_TPL = Path('templates/snippets/image-card-Right.html')
 BIO_TPL   = Path('templates/snippets/bio.html')
 PDF_TPL   = Path('templates/snippets/pdf-button.html')
 
+CSS_SENTINEL = '/* =========================\n       Tokens'
+
 def inject_css(html: str, css: str) -> str:
+    if CSS_SENTINEL in html:
+        return html
     if re.search(r'</head>', html, flags=re.I):
         return re.sub(r'</head>', css + '\n</head>', html, count=1, flags=re.I)
     if re.search(r'<body[^>]*>', html, flags=re.I):
@@ -24,9 +28,10 @@ def expand_photo_tokens(html: str, main_tpl: str, left_tpl: str, right_tpl: str)
 
 def ensure_class_on_header(open_tag: str) -> str:
     if re.search(r'class=', open_tag, flags=re.I):
-        return re.sub(r'class=(["\'])(.*?)\1',
-                      lambda m: f'class="{m.group(2)} article-header"' if 'article-header' not in m.group(2).lower() else m.group(0),
-                      open_tag, count=1, flags=re.I)
+        def repl(m):
+            cls = m.group(2)
+            return f'class="{cls} article-header"' if 'article-header' not in cls.lower() else m.group(0)
+        return re.sub(r'class=(["\'])(.*?)\1', repl, open_tag, count=1, flags=re.I)
     return open_tag[:-1] + ' class="article-header">'
 
 def normalize_header(html: str) -> str:
@@ -37,25 +42,25 @@ def normalize_header(html: str) -> str:
     open_tag = ensure_class_on_header(open_tag)
     body = inner
 
-    # Author -> h3.author
-    body = re.sub(r'<p[^>]*>\s*(?:<strong>)?\s*By\s+([^<]+?)(?:</strong>)?\s*</p>',
+    # Author
+    body = re.sub(r'<p[^>]*>\s*(?:<strong>)?\s*By\s*[:—-]?\s+([^<]+?)(?:</strong>)?\s*</p>',
                   lambda mm: f'<h3 class="author">By {mm.group(1).strip()}</h3>',
                   body, count=1, flags=re.I)
 
-    # Org -> first remaining <p> after author -> h4.org
-    body = re.sub(r'(<h3[^>]*class=["\'][^"\']*author[^"\']*["\'][^>]*>[\s\S]*?</h3>)([\s\S]*?)(<p(?![^>]*class=["\'][^"\']*pubdate)[\s\S]*?</p>)',
+    # Org (first remaining p after author)
+    body = re.sub(r'(<h3[^>]*class=["\'][^"\']*\bauthor\b[^"\']*["\'][^>]*>[\s\S]*?</h3>)([\s\S]*?)(<p(?![^>]*class=["\'][^"\']*pubdate)[\s\S]*?</p>)',
                   lambda mm: mm.group(1) + mm.group(2) + mm.group(3).replace('<p','<h4 class="org"').replace('</p>','</h4>'),
                   body, count=1, flags=re.I)
 
-    # Ensure pubdate
-    if not re.search(r'<p[^>]*class=["\'][^"\']*pubdate', body, flags=re.I):
+    # Pubdate
+    if not re.search(r'<p[^>]*class=["\'][^"\']*\bpubdate\b', body, flags=re.I):
         body = re.sub(r'<p>([A-Za-z]{3,}\s+\d{1,2},\s+\d{4})</p>',
                       r'<p class="pubdate">\1</p>', body, count=1, flags=re.I)
-        if not re.search(r'<p[^>]*class=["\'][^"\']*pubdate', body, flags=re.I):
+        if not re.search(r'<p[^>]*class=["\'][^"\']*\bpubdate\b', body, flags=re.I):
             body += '\n<p class="pubdate">(date goes here)</p>'
 
     # Marker after pubdate
-    body = re.sub(r'(<p[^>]*class=["\'][^"\']*pubdate[^"\']*["\'][^>]*>[\s\S]*?</p>)',
+    body = re.sub(r'(<p[^>]*class=["\'][^"\']*\bpubdate\b[^"\']*["\'][^>]*>[\s\S]*?</p>)',
                   r'\1\n<!--__AFTER_PUBDATE__-->', body, count=1, flags=re.I)
 
     new_header = f'{open_tag}{body}{close_tag}'
@@ -67,17 +72,14 @@ def insert_pdf_after_date(html: str, pdf_tpl: str) -> str:
         return html
     open_tag, inner, close_tag = hm.groups()
 
-    # If PDF already present (icon or link text), just tag it
     if re.search(r'(pdficon_small\.png|Download the PDF)', inner, flags=re.I):
         inner = re.sub(r'(<p[^>]*>[\s\S]*?(?:pdficon_small\.png|Download the PDF)[\s\S]*?</p>)',
                        r'\1\n<!--__AFTER_PDF__-->', inner, count=1, flags=re.I)
         return html[:hm.start()] + open_tag + inner + close_tag + html[hm.end():]
 
-    # Otherwise, insert pdf after pubdate marker
     if '<!--__AFTER_PUBDATE__-->' in html:
         return html.replace('<!--__AFTER_PUBDATE__-->', pdf_tpl + '\n<!--__AFTER_PDF__-->')
 
-    # Fallback: append in header
     return re.sub(r'</header>', pdf_tpl + '\n<!--__AFTER_PDF__-->\n</header>', html, count=1, flags=re.I)
 
 def hoist_main_after_pdf(html: str, main_tpl: str) -> str:
@@ -99,20 +101,17 @@ def normalize_references(html: str) -> str:
     end = start + (tail_match.start() if tail_match else 0)
     block = html[start:end]
 
-    # p -> class="reference"
     def fix_p(m):
         tag = m.group(0)
-        if re.search(r'class=["\'][^"\']*reference', tag, flags=re.I):
+        if re.search(r'class=["\'][^"\']*\breference\b', tag, flags=re.I):
             return tag
         if not re.search(r'class=', tag, flags=re.I):
             return tag.replace('<p','<p class="reference"', 1)
         return re.sub(r'class=["\'][^"\']*["\']', 'class="reference"', tag, flags=re.I)
     block = re.sub(r'<p[^>]*>', fix_p, block, flags=re.I)
 
-    # <span> -> <em>
     block = re.sub(r'</?span>', lambda mm: '</em>' if mm.group(0).startswith('</') else '<em>', block, flags=re.I)
 
-    # Add link attrs
     def link_repl(mm):
         pre, quote, url, post = mm.group(1), mm.group(2), mm.group(3), mm.group(4)
         meta = (pre + post).lower()
@@ -128,7 +127,7 @@ def normalize_references(html: str) -> str:
     return html[:start] + block + html[end:]
 
 def insert_bio_if_missing(html: str, bio_tpl: str) -> str:
-    if re.search(r'<div[^>]*class=["\'][^"\']*bio-card', html, flags=re.I):
+    if re.search(r'<div[^>]*class=["\'][^"\']*\bbio-card\b', html, flags=re.I):
         return html
     ref_h3 = re.search(r'<h3[^>]*>\s*References\s*</h3>', html, flags=re.I)
     if not ref_h3:
@@ -140,6 +139,11 @@ def insert_bio_if_missing(html: str, bio_tpl: str) -> str:
         insert_at = idx + close_sec.end()
         return html[:insert_at] + '\n' + bio_tpl + '\n' + html[insert_at:]
     return html.replace(ref_h3.group(0), ref_h3.group(0) + '\n' + bio_tpl + '\n', 1)
+
+def final_cleanup(html: str) -> str:
+    html = html.replace('<!--__AFTER_PUBDATE__-->', '').replace('<!--__AFTER_PDF__-->', '')
+    html = re.sub(r'\n{3,}', '\n\n', html)
+    return html
 
 def main():
     if len(sys.argv) < 3:
@@ -155,13 +159,14 @@ def main():
     bio_t   = BIO_TPL.read_text(encoding='utf-8')
     pdf_t   = PDF_TPL.read_text(encoding='utf-8')
 
-    out = inject_css(html, css)                         # CSS in <head> (or fallback)
+    out = inject_css(html, css)
     out = expand_photo_tokens(out, main_t, left_t, right_t)
-    out = normalize_header(out)                        # header roles + marker
-    out = insert_pdf_after_date(out, pdf_t)            # PDF after date (dedupe-safe)
-    out = hoist_main_after_pdf(out, main_t)            # Main image after PDF (or placeholder)
-    out = normalize_references(out)                    # <p class="reference"> + link attrs
-    out = insert_bio_if_missing(out, bio_t)            # bio after refs if missing
+    out = normalize_header(out)
+    out = insert_pdf_after_date(out, pdf_t)
+    out = hoist_main_after_pdf(out, main_t)
+    out = normalize_references(out)
+    out = insert_bio_if_missing(out, bio_t)
+    out = final_cleanup(out)
 
     Path(out_file).write_text(out, encoding='utf-8')
     print(f'Wrote {out_file}')
