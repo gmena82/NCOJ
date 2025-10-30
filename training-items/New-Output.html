@@ -104,15 +104,34 @@
   .pubdate{ margin:0.2em 0 1em; }
 
   /* Image cards */
-  .image-card{ background:var(--frame-bg); border:1px solid var(--frame-border); box-shadow:0 1px 3px rgba(0,0,0,.2); margin:1rem 0; }
+  /* --- Hybrid float + flex for figures --- */
+  figure.image-card{
+    background:var(--frame-bg);
+    border:1px solid var(--frame-border);
+    box-shadow:0 1px 3px rgba(0,0,0,.2);
+    display:flex;
+    flex-direction:column;
+    gap:0.5rem;
+    max-width:380px;
+    margin:0 0 1rem 0;
+  }
+  figure.image-card.Left{ float:left; margin:0 1rem 1rem 0; }
+  figure.image-card.Right{ float:right; margin:0 0 1rem 1rem; }
+  figure.image-card.Main{ float:none; max-width:none; margin:1rem 0; }
+  /* Optional: slightly tighter wrap contour (safe default) */
+  /* figure.image-card{ shape-outside: inset(0 round 8px); } */
   .image-card .image-body{ padding:8px; background:#fff; }
-  .image-card .image-body img{ display:block; width:100%; height:auto; }
+  .image-body img{ display:block; max-width:100%; height:auto; }
   .image-card .image-caption{ background:var(--frame-caption-bg); border-top:1px solid #e2e2e2; color:var(--frame-text); font-size:90%; line-height:1.5; padding:.75rem .9rem; }
-  .image-clear{ clear:both; }
-  @media (min-width:768px){
-    .image-card.Left{ float:left; width:50%; margin:0 1rem 1rem 0; }
-    .image-card.Right{ float:right; width:50%; margin:0 0 1rem 1rem; }
-    .image-card.Main{ float:none; width:100%; margin:1rem 0; }
+  .clear-next{ clear:both; }
+  figure.image-card + figure.image-card{ clear:both; }
+  @media (max-width:640px){
+    figure.image-card.Left,
+    figure.image-card.Right{
+      float:none;
+      margin:1rem 0;
+      max-width:none;
+    }
   }
 
   /* Bio container */
@@ -154,7 +173,6 @@
 </div>
 <figcaption class="image-caption">image caption here.</figcaption>
 </figure>
-<div class="image-clear"></div>
 
 <h3>The Two Primary Soldier Loads</h3>
 <p>Two primary types of Soldier loads exist in doctrine: the <em>fighting load</em> and the <em>approach march load</em>.</p>
@@ -175,7 +193,6 @@
 </div>
 <figcaption class="image-caption">image caption here.</figcaption>
 </figure>
-<div class="image-clear"></div>
 
 <p>Leaders must educate their formations on this guidance and incorporate it into mission planning. By fostering a culture of load discipline, leaders set the standard for effective resource management.</p>
 <h3>Conclusion</h3>
