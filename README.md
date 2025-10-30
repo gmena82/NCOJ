@@ -59,7 +59,7 @@ If none exists, inserts a Main placeholder (change link/alt/caption later).
 
 Image tokens expand into framed cards with uniform caption area & subtle shadow.
 
-Left/Right get a trailing <div class="image-clear"></div> to stop text wrapping.
+Left/Right figures float so surrounding text wraps automatically; use `.clear-next` on the following block only if you need to stop the wrap.
 
 References under <h3>References</h3> are normalized:
 
@@ -98,7 +98,7 @@ Feature image:
 
 Body images:
 
- Left/Right images are framed and followed by <div class="image-clear"></div>
+ Left/Right images use `<figure class="image-card Left|Right">` markup with `.image-body` + `.image-caption`; no clearing divs.
 
 References:
 
@@ -133,6 +133,22 @@ templates/snippets/bio.html – bio card snippet.
 tools/article_swapper.js / tools/article_swapper.py – Node/Python transformers (identical behavior).
 
 training-items/ – example New-Original-Input.html and New-Output.html.
+
+## Figures & Output
+
+- Use `<figure class="image-card Left|Right">` with `.image-body` and `.image-caption`.
+- Layout uses hybrid **float + flex**:
+  - Figures float left or right so surrounding text wraps.
+  - Internal layout (image + caption) is managed by flex.
+  - **Do not** add `<div class="image-clear"></div>`.
+  - To stop wrapping after a specific figure, add `.clear-next` to the **next** block.
+  - On mobile, floats are disabled and figures become full-width.
+
+### Folder conventions
+- `in-production/` → publish-ready articles. **Always put final edited output here.**
+- `training-items/` → examples, experiments, or model training inputs/outputs.
+- When editing a publish file, open the HTML from `in-production/`. If it’s a placeholder,
+  **rename** it to the final **Title-Slug.html** and update `<title>` and the first `<h1>`.
 
 Running the swapper
 
